@@ -2,406 +2,369 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Insufilm Pro — Controle de Estoque</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f1117">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Insufilm Pro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.x/tabler-icons.min.css">
 <style>
-  :root {
-    --bg: #0f1117;
-    --bg2: #161820;
-    --bg3: #1e2029;
-    --bg4: #252732;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --text: #f0f0f5;
-    --text2: #9b9cb0;
-    --text3: #5a5b6e;
-    --accent: #00d4a0;
-    --accent2: #00a87e;
-    --accent-bg: rgba(0,212,160,0.08);
-    --amber: #f5a623;
-    --amber-bg: rgba(245,166,35,0.1);
-    --red: #ff5c5c;
-    --red-bg: rgba(255,92,92,0.1);
-    --blue: #4d8eff;
-    --blue-bg: rgba(77,142,255,0.1);
-    --radius: 10px;
-    --radius-lg: 14px;
-    --shadow: 0 2px 16px rgba(0,0,0,0.4);
-  }
+:root {
+  --bg:#0f1117; --bg2:#161820; --bg3:#1e2029; --bg4:#252732;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+  --text:#f0f0f5; --text2:#9b9cb0; --text3:#5a5b6e;
+  --accent:#00d4a0; --accent2:#00a87e; --accent-bg:rgba(0,212,160,0.08);
+  --amber:#f5a623; --amber-bg:rgba(245,166,35,0.1);
+  --red:#ff5c5c; --red-bg:rgba(255,92,92,0.1);
+  --blue:#4d8eff; --blue-bg:rgba(77,142,255,0.1);
+  --r:10px; --rl:14px;
+  --nav-h:62px;
+  --topbar-h:56px;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;-webkit-text-size-adjust:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { font-size: 14px; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* ── DESKTOP LAYOUT ── */
+.app{display:flex;height:100vh;overflow:hidden;}
 
-  /* ── Layout ── */
-  .app { display: flex; height: 100vh; overflow: hidden; }
+/* ── SIDEBAR (desktop) ── */
+.sidebar{
+  width:230px;flex-shrink:0;
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+}
+.sidebar-brand{padding:20px 20px 16px;border-bottom:1px solid var(--border);}
+.brand-logo{display:flex;align-items:center;gap:10px;}
+.brand-icon{width:32px;height:32px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#000;flex-shrink:0;}
+.brand-name{font-size:15px;font-weight:600;letter-spacing:-.3px;}
+.brand-sub{font-size:11px;color:var(--text3);margin-top:1px;}
+.sidebar-nav{flex:1;padding:10px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+.nav-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:10px 10px 4px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);font-size:13.5px;cursor:pointer;color:var(--text2);transition:all .15s;position:relative;user-select:none;}
+.nav-item:hover{background:var(--bg3);color:var(--text);}
+.nav-item.active{background:var(--accent-bg);color:var(--accent);}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:18px;background:var(--accent);border-radius:0 3px 3px 0;}
+.nav-item i{font-size:18px;flex-shrink:0;}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;min-width:18px;text-align:center;}
+.sidebar-user{padding:14px 20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-bg);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--accent);flex-shrink:0;}
+.user-name{font-size:13px;font-weight:500;}
+.user-role{font-size:11px;color:var(--text3);}
+.btn-logout{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;padding:6px;border-radius:6px;transition:all .15s;display:flex;align-items:center;font-size:18px;}
+.btn-logout:hover{color:var(--red);background:var(--red-bg);}
 
-  /* ── Sidebar ── */
-  .sidebar {
-    width: 230px; flex-shrink: 0;
-    background: var(--bg2);
-    border-right: 1px solid var(--border);
-    display: flex; flex-direction: column;
-    padding: 0;
-    transition: width 0.2s;
-  }
-  .sidebar-brand {
-    padding: 22px 20px 18px;
-    border-bottom: 1px solid var(--border);
-  }
-  .brand-logo {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 4px;
-  }
-  .brand-icon {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; color: #000; font-weight: 600;
-  }
-  .brand-name { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
-  .brand-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
-  .sidebar-nav { flex: 1; padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
-  .nav-label { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; padding: 10px 10px 4px; }
-  .nav-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 9px 12px; border-radius: var(--radius);
-    font-size: 13.5px; cursor: pointer; color: var(--text2);
-    transition: all 0.15s; position: relative;
-    user-select: none;
-  }
-  .nav-item:hover { background: var(--bg3); color: var(--text); }
-  .nav-item.active { background: var(--accent-bg); color: var(--accent); }
-  .nav-item.active::before {
-    content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-    width: 3px; height: 18px; background: var(--accent); border-radius: 0 3px 3px 0;
-  }
-  .nav-item i { font-size: 17px; flex-shrink: 0; }
-  .nav-badge {
-    margin-left: auto; background: var(--red);
-    color: white; font-size: 10px; font-weight: 600;
-    padding: 1px 6px; border-radius: 99px; min-width: 18px; text-align: center;
-  }
-  .sidebar-user {
-    padding: 14px 20px;
-    border-top: 1px solid var(--border);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .user-avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--accent-bg); border: 1px solid var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600; color: var(--accent); flex-shrink: 0;
-  }
-  .user-name { font-size: 13px; font-weight: 500; }
-  .user-role { font-size: 11px; color: var(--text3); }
-  .btn-logout {
-    margin-left: auto; background: none; border: none;
-    color: var(--text3); cursor: pointer; padding: 4px;
-    border-radius: 6px; transition: all 0.15s;
-    display: flex; align-items: center;
-  }
-  .btn-logout:hover { color: var(--red); background: var(--red-bg); }
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
+.topbar{padding:0 22px;height:var(--topbar-h);background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;flex-shrink:0;}
+.topbar-left{display:flex;flex-direction:column;gap:1px;}
+.topbar h2{font-size:16px;font-weight:600;}
+.topbar-sub{font-size:11px;color:var(--text3);}
+.page{padding:20px 22px;flex:1;}
 
-  /* ── Main ── */
-  .main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
-  .topbar {
-    padding: 16px 26px;
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 50;
-  }
-  .topbar-left { display: flex; flex-direction: column; gap: 2px; }
-  .topbar h2 { font-size: 16px; font-weight: 600; }
-  .topbar-sub { font-size: 12px; color: var(--text3); }
-  .page { padding: 24px 26px; flex: 1; }
+/* ── BOTTOM NAV (mobile only, hidden on desktop) ── */
+.bottom-nav{display:none;}
 
-  /* ── Metric Cards ── */
-  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
-  .metric-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 18px 20px;
-    position: relative; overflow: hidden; transition: border-color 0.2s;
-  }
-  .metric-card:hover { border-color: var(--border2); }
-  .metric-card::after {
-    content: ''; position: absolute; top: 0; right: 0;
-    width: 60px; height: 60px; border-radius: 0 var(--radius-lg) 0 60px;
-    opacity: 0.06;
-  }
-  .metric-card.green::after { background: var(--accent); }
-  .metric-card.amber::after { background: var(--amber); }
-  .metric-card.red::after { background: var(--red); }
-  .metric-card.blue::after { background: var(--blue); }
-  .metric-icon {
-    width: 34px; height: 34px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px; margin-bottom: 14px;
-  }
-  .metric-icon.green { background: var(--accent-bg); color: var(--accent); }
-  .metric-icon.amber { background: var(--amber-bg); color: var(--amber); }
-  .metric-icon.red { background: var(--red-bg); color: var(--red); }
-  .metric-icon.blue { background: var(--blue-bg); color: var(--blue); }
-  .metric-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; font-weight: 500; }
-  .metric-value { font-size: 24px; font-weight: 600; letter-spacing: -0.5px; line-height: 1; }
-  .metric-value.sm { font-size: 18px; }
-  .metric-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+/* ── FAB (mobile only) ── */
+.fab{display:none;}
 
-  /* ── Cards / Panels ── */
-  .panel {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 18px;
-  }
-  .panel-header {
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .panel-title { font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-  .panel-title i { font-size: 16px; color: var(--text3); }
+/* ── METRIC CARDS ── */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;}
+.metric-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px 18px;position:relative;overflow:hidden;transition:border-color .2s;}
+.metric-card:hover{border-color:var(--border2);}
+.metric-card::after{content:'';position:absolute;top:0;right:0;width:56px;height:56px;border-radius:0 var(--rl) 0 56px;opacity:.06;}
+.metric-card.green::after{background:var(--accent);}
+.metric-card.amber::after{background:var(--amber);}
+.metric-card.red::after{background:var(--red);}
+.metric-card.blue::after{background:var(--blue);}
+.metric-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:12px;}
+.metric-icon.green{background:var(--accent-bg);color:var(--accent);}
+.metric-icon.amber{background:var(--amber-bg);color:var(--amber);}
+.metric-icon.red{background:var(--red-bg);color:var(--red);}
+.metric-icon.blue{background:var(--blue-bg);color:var(--blue);}
+.metric-label{font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;font-weight:500;}
+.metric-value{font-size:22px;font-weight:600;letter-spacing:-.5px;line-height:1;}
+.metric-value.sm{font-size:17px;}
+.metric-sub{font-size:11px;color:var(--text3);margin-top:3px;}
 
-  /* ── Table ── */
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th {
-    padding: 10px 20px; text-align: left;
-    font-size: 10.5px; font-weight: 600; color: var(--text3);
-    text-transform: uppercase; letter-spacing: 0.07em;
-    background: var(--bg3); border-bottom: 1px solid var(--border);
-  }
-  td { padding: 12px 20px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: middle; }
-  td:first-child { color: var(--text); font-weight: 500; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--bg3); }
-  .mono { font-family: 'DM Mono', monospace; font-size: 12.5px; }
+/* ── PANELS ── */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:16px;}
+.panel-header{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.panel-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;}
+.panel-title i{font-size:15px;color:var(--text3);}
 
-  /* ── Progress ── */
-  .progress-wrap {
-    background: var(--bg4); border-radius: 99px; height: 5px;
-    overflow: hidden; min-width: 80px;
-  }
-  .progress-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{padding:9px 18px;text-align:left;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;background:var(--bg3);border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:11px 18px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle;}
+td:first-child{color:var(--text);font-weight:500;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg3);}
+.mono{font-family:'DM Mono',monospace;font-size:12px;}
 
-  /* ── Badges ── */
-  .badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 600;
-  }
-  .badge-ok { background: rgba(0,212,160,0.12); color: var(--accent); }
-  .badge-low { background: var(--amber-bg); color: var(--amber); }
-  .badge-critical { background: var(--red-bg); color: var(--red); }
-  .badge-type { background: var(--bg4); color: var(--text3); font-size: 11px; padding: 2px 8px; border-radius: 6px; }
+/* ── MOBILE CARD LIST (replaces table on small screens) ── */
+.mat-list{display:none;flex-direction:column;gap:0;}
+.mat-card{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:default;}
+.mat-card:last-child{border-bottom:none;}
+.mat-card-info{flex:1;min-width:0;}
+.mat-card-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mat-card-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.mat-card-meta{display:flex;align-items:center;gap:8px;margin-top:6px;}
+.mat-card-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+.mat-card-actions{display:flex;gap:4px;}
 
-  /* ── Buttons ── */
-  .btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 14px; border-radius: var(--radius);
-    font-size: 13px; font-weight: 500; cursor: pointer;
-    border: 1px solid var(--border2); background: var(--bg3);
-    color: var(--text); transition: all 0.15s; font-family: 'DM Sans', sans-serif;
-  }
-  .btn:hover { background: var(--bg4); border-color: var(--border2); }
-  .btn-primary {
-    background: var(--accent); color: #000; border-color: var(--accent);
-  }
-  .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
-  .btn-sm { padding: 5px 10px; font-size: 12px; }
-  .btn-icon { padding: 6px; width: 30px; height: 30px; justify-content: center; }
-  .btn-danger { color: var(--red); border-color: transparent; background: transparent; }
-  .btn-danger:hover { background: var(--red-bg); }
+.svc-list{display:none;flex-direction:column;gap:0;}
+.svc-card{padding:14px 16px;border-bottom:1px solid var(--border);}
+.svc-card:last-child{border-bottom:none;}
+.svc-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
+.svc-card-name{font-size:14px;font-weight:600;color:var(--text);}
+.svc-card-cost{font-size:14px;font-weight:600;color:var(--accent);font-family:'DM Mono',monospace;}
+.svc-card-meta{font-size:12px;color:var(--text3);}
 
-  /* ── Alert Banner ── */
-  .alert-banner {
-    background: var(--amber-bg); border: 1px solid rgba(245,166,35,0.2);
-    border-radius: var(--radius); padding: 12px 16px;
-    display: flex; align-items: flex-start; gap: 10px;
-    margin-bottom: 20px; font-size: 13px; color: var(--amber);
+/* ── PROGRESS ── */
+.progress-wrap{background:var(--bg4);border-radius:99px;height:5px;overflow:hidden;min-width:70px;}
+.progress-fill{height:100%;border-radius:99px;transition:width .4s ease;}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:99px;font-size:11px;font-weight:600;}
+.badge-ok{background:rgba(0,212,160,.12);color:var(--accent);}
+.badge-low{background:var(--amber-bg);color:var(--amber);}
+.badge-critical{background:var(--red-bg);color:var(--red);}
+.badge-type{background:var(--bg4);color:var(--text3);font-size:11px;padding:2px 7px;border-radius:6px;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text);transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.btn:hover{background:var(--bg4);}
+.btn-primary{background:var(--accent);color:#000;border-color:var(--accent);}
+.btn-primary:hover{background:var(--accent2);border-color:var(--accent2);}
+.btn-sm{padding:5px 10px;font-size:12px;}
+.btn-icon{padding:6px;width:30px;height:30px;justify-content:center;}
+.btn-danger{color:var(--red);border-color:transparent;background:transparent;}
+.btn-danger:hover{background:var(--red-bg);}
+.btn-full{width:100%;justify-content:center;}
+
+/* ── ALERT ── */
+.alert-banner{background:var(--amber-bg);border:1px solid rgba(245,166,35,.2);border-radius:var(--r);padding:12px 14px;display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;font-size:13px;color:var(--amber);}
+.alert-banner i{font-size:17px;flex-shrink:0;margin-top:1px;}
+.alert-banner-text strong{display:block;font-weight:600;margin-bottom:2px;}
+.alert-banner-text span{color:rgba(245,166,35,.7);font-size:12px;}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl) var(--rl) 0 0;padding:24px 22px;width:100%;max-width:520px;animation:slideUp .22s ease;max-height:92vh;overflow-y:auto;padding-bottom:calc(22px + var(--safe-b));}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.modal-handle{width:36px;height:4px;background:var(--bg4);border-radius:99px;margin:0 auto 18px;}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.modal-title{font-size:15px;font-weight:600;}
+.modal-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;padding:4px;border-radius:6px;transition:color .15s;display:flex;align-items:center;}
+.modal-close:hover{color:var(--text);}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
+
+/* ── FORM ── */
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:11px;color:var(--text3);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+input[type=text],input[type=number],input[type=password],input[type=email],select,textarea{
+  width:100%;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--r);
+  background:var(--bg3);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;
+  transition:border-color .15s;outline:none;-webkit-appearance:none;appearance:none;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235a5b6e' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+select option{background:var(--bg3);}
+
+/* ── COST PREVIEW ── */
+.cost-preview{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;}
+.cost-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;}
+.cost-row+.cost-row{margin-top:6px;}
+.cost-row .lbl{color:var(--text3);}
+.cost-row .val{font-weight:600;font-family:'DM Mono',monospace;}
+
+/* ── LOGIN ── */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:16px;}
+.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:32px 28px;width:100%;max-width:380px;}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.login-logo .icon{width:42px;height:42px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;color:#000;flex-shrink:0;}
+.login-logo h1{font-size:20px;font-weight:700;letter-spacing:-.4px;}
+.login-logo p{font-size:12px;color:var(--text3);}
+.login-hint{font-size:11px;color:var(--text3);text-align:center;margin-top:14px;}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* ── EMPTY ── */
+.empty-state{padding:44px 20px;text-align:center;}
+.empty-state i{font-size:34px;color:var(--text3);display:block;margin-bottom:10px;}
+.empty-state p{color:var(--text3);font-size:13px;line-height:1.5;}
+
+/* ── CHART ── */
+.chart-wrap{padding:14px 18px;position:relative;height:210px;}
+
+/* ── ANIM ── */
+.page-section{animation:fadeIn .18s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:99px;}
+
+/* ════════════════════════════════════════════
+   MOBILE BREAKPOINT  ≤ 640px
+════════════════════════════════════════════ */
+@media(max-width:640px){
+  /* Hide desktop sidebar */
+  .sidebar{display:none;}
+
+  /* App stacks vertically */
+  .app{flex-direction:column;height:100dvh;}
+
+  /* Topbar slim */
+  .topbar{padding:0 16px;height:52px;}
+  .topbar h2{font-size:15px;}
+  .topbar-sub{display:none;}
+  #topbar-actions{display:none;}/* actions moved to FAB */
+
+  /* Page scrolls above bottom nav */
+  .main{padding-bottom:var(--nav-h);}
+  .page{padding:14px 14px;}
+
+  /* Bottom navigation bar */
+  .bottom-nav{
+    display:flex;
+    position:fixed;bottom:0;left:0;right:0;
+    height:calc(var(--nav-h) + var(--safe-b));
+    padding-bottom:var(--safe-b);
+    background:var(--bg2);border-top:1px solid var(--border);
+    z-index:100;
   }
-  .alert-banner i { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-  .alert-banner-text strong { display: block; font-weight: 600; margin-bottom: 2px; }
-  .alert-banner-text span { color: rgba(245,166,35,0.7); font-size: 12px; }
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text3);transition:color .15s;position:relative;padding-top:4px;}
+  .bn-item.active{color:var(--accent);}
+  .bn-item i{font-size:22px;}
+  .bn-item span{font-size:10px;font-weight:500;}
+  .bn-badge{position:absolute;top:6px;right:calc(50% - 18px);background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:99px;min-width:16px;text-align:center;}
 
-  /* ── Modal ── */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.65); z-index: 200;
-    align-items: center; justify-content: center;
-    backdrop-filter: blur(4px);
+  /* FAB — floating action button */
+  .fab{
+    display:flex;
+    position:fixed;right:16px;bottom:calc(var(--nav-h) + 12px + var(--safe-b));
+    width:52px;height:52px;border-radius:50%;
+    background:var(--accent);color:#000;border:none;cursor:pointer;
+    font-size:24px;align-items:center;justify-content:center;
+    box-shadow:0 4px 20px rgba(0,212,160,.35);
+    z-index:99;transition:all .15s;
   }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--bg2); border: 1px solid var(--border2);
-    border-radius: var(--radius-lg); padding: 26px;
-    width: 460px; max-width: 95vw;
-    animation: slideUp 0.2s ease;
-    max-height: 90vh; overflow-y: auto;
-  }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-  .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-  .modal-title { font-size: 15px; font-weight: 600; }
-  .modal-close { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 20px; padding: 2px; transition: color 0.15s; }
-  .modal-close:hover { color: var(--text); }
-  .modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .fab:active{transform:scale(0.93);}
+  .fab.hidden{display:none;}
 
-  /* ── Form ── */
-  .form-group { margin-bottom: 16px; }
-  .form-group label { display: block; font-size: 11.5px; color: var(--text3); margin-bottom: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  input[type=text], input[type=number], input[type=password], input[type=email], select, textarea {
-    width: 100%; padding: 9px 12px;
-    border: 1px solid var(--border2); border-radius: var(--radius);
-    background: var(--bg3); color: var(--text);
-    font-size: 13px; font-family: 'DM Sans', sans-serif;
-    transition: border-color 0.15s; outline: none;
-  }
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-  select option { background: var(--bg3); }
+  /* Metric grid 2 cols on mobile */
+  .metric-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .metric-card{padding:13px 14px;}
+  .metric-value{font-size:19px;}
+  .metric-value.sm{font-size:15px;}
+  .metric-icon{margin-bottom:8px;}
 
-  /* ── Preview Cost ── */
-  .cost-preview {
-    background: var(--bg3); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 12px 14px; margin-bottom: 14px;
-  }
-  .cost-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-  .cost-row + .cost-row { margin-top: 6px; }
-  .cost-row .lbl { color: var(--text3); }
-  .cost-row .val { font-weight: 600; font-family: 'DM Mono', monospace; }
+  /* Two-col becomes one col */
+  .two-col{grid-template-columns:1fr;}
 
-  /* ── Login ── */
-  .login-page {
-    min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    background: var(--bg);
-  }
-  .login-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); padding: 38px 36px; width: 380px;
-    max-width: 95vw;
-  }
-  .login-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-  .login-logo .icon { width: 42px; height: 42px; border-radius: 10px; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #000; }
-  .login-logo h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
-  .login-logo p { font-size: 12px; color: var(--text3); }
-  .login-hint { font-size: 11px; color: var(--text3); text-align: center; margin-top: 16px; }
+  /* Hide desktop tables, show mobile card lists */
+  .desktop-table{display:none !important;}
+  .mat-list{display:flex;}
+  .svc-list{display:flex;}
 
-  /* ── Two col grid for panels ── */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  /* Modal full-sheet from bottom */
+  .modal-overlay{align-items:flex-end;}
+  .modal{border-radius:18px 18px 0 0;max-height:88vh;padding:16px 18px;padding-bottom:calc(18px + var(--safe-b));}
 
-  /* ── Empty ── */
-  .empty-state { padding: 48px 20px; text-align: center; }
-  .empty-state i { font-size: 36px; color: var(--text3); display: block; margin-bottom: 10px; }
-  .empty-state p { color: var(--text3); font-size: 13px; }
+  /* Form rows become single col */
+  .form-row{grid-template-columns:1fr;}
 
-  /* ── Chart container ── */
-  .chart-wrap { padding: 16px 20px; position: relative; height: 220px; }
+  /* Inputs bigger touch targets */
+  input[type=text],input[type=number],input[type=password],select{padding:12px 14px;font-size:15px;}
 
-  /* ── Page animations ── */
-  .page-section { animation: fadeIn 0.2s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  /* Modal footer full width buttons */
+  .modal-footer{flex-direction:column-reverse;}
+  .modal-footer .btn{width:100%;justify-content:center;padding:12px;}
 
-  /* ── Scrollbar ── */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 99px; }
+  /* Alert banner compact */
+  .alert-banner{padding:10px 12px;font-size:12px;}
 
-  /* ── Responsive ── */
-  @media (max-width: 680px) {
-    .sidebar { width: 56px; }
-    .sidebar-brand .brand-name, .sidebar-brand .brand-sub,
-    .nav-item span, .sidebar-user .user-name, .sidebar-user .user-role { display: none; }
-    .nav-item { justify-content: center; }
-    .nav-item.active::before { display: none; }
-    .sidebar-user { justify-content: center; }
-    .btn-logout { margin: 0; }
-    .two-col { grid-template-columns: 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-    .topbar h2 { font-size: 14px; }
-    .page { padding: 16px; }
-  }
-  @media (max-width: 400px) {
-    .sidebar { width: 0; display: none; }
-  }
+  /* Panel header */
+  .panel-header{padding:12px 14px;}
+  .panel-title{font-size:12.5px;}
+}
+
+/* Medium: 641–900px — sidebar collapsed */
+@media(min-width:641px) and (max-width:900px){
+  .sidebar{width:60px;}
+  .sidebar-brand .brand-name,.sidebar-brand .brand-sub,
+  .nav-item span,.nav-item .nav-badge,
+  .sidebar-user .user-name,.sidebar-user .user-role{display:none;}
+  .nav-item{justify-content:center;padding:10px;}
+  .nav-item.active::before{display:none;}
+  .sidebar-brand{padding:16px 14px;}
+  .sidebar-user{justify-content:center;padding:12px;}
+  .btn-logout{margin:0;}
+  .two-col{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ── LOGIN ── -->
 <div id="login-page" class="login-page">
   <div class="login-card">
     <div class="login-logo">
       <div class="icon">IF</div>
-      <div>
-        <h1>Insufilm Pro</h1>
-        <p>Controle de estoque por metragem</p>
-      </div>
+      <div><h1>Insufilm Pro</h1><p>Controle de estoque por metragem</p></div>
     </div>
     <div class="form-group">
       <label>Usuário</label>
-      <input type="text" id="login-user" value="admin" placeholder="admin">
+      <input type="text" id="login-user" value="admin" placeholder="admin" autocomplete="username">
     </div>
     <div class="form-group">
       <label>Senha</label>
-      <input type="password" id="login-pass" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      <input type="password" id="login-pass" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:4px" onclick="doLogin()">
+    <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="doLogin()">
       <i class="ti ti-login"></i> Entrar
     </button>
-    <p class="login-hint">MVP · dados salvos localmente no navegador</p>
+    <p class="login-hint">MVP · dados salvos no navegador</p>
   </div>
 </div>
 
-<!-- APP -->
+<!-- ── APP ── -->
 <div id="app" class="app" style="display:none">
 
-  <!-- Sidebar -->
+  <!-- Desktop sidebar -->
   <nav class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-logo">
         <div class="brand-icon">IF</div>
-        <div>
-          <div class="brand-name">Insufilm Pro</div>
-          <div class="brand-sub">Estoque</div>
-        </div>
+        <div><div class="brand-name">Insufilm Pro</div><div class="brand-sub">Estoque</div></div>
       </div>
     </div>
     <div class="sidebar-nav">
       <div class="nav-label">Menu</div>
-      <div class="nav-item active" onclick="goTo('dashboard',this)" data-page="dashboard">
-        <i class="ti ti-layout-dashboard"></i><span>Dashboard</span>
-      </div>
-      <div class="nav-item" onclick="goTo('materials',this)" data-page="materials">
-        <i class="ti ti-package"></i><span>Materiais</span>
-        <span class="nav-badge" id="badge-low" style="display:none">0</span>
-      </div>
-      <div class="nav-item" onclick="goTo('services',this)" data-page="services">
-        <i class="ti ti-scissors"></i><span>Serviços</span>
-      </div>
-      <div class="nav-item" onclick="goTo('reports',this)" data-page="reports">
-        <i class="ti ti-chart-bar"></i><span>Relatórios</span>
-      </div>
+      <div class="nav-item active" onclick="goTo('dashboard',this)"><i class="ti ti-layout-dashboard"></i><span>Dashboard</span></div>
+      <div class="nav-item" onclick="goTo('materials',this)"><i class="ti ti-package"></i><span>Materiais</span><span class="nav-badge" id="badge-low-desk" style="display:none">0</span></div>
+      <div class="nav-item" onclick="goTo('services',this)"><i class="ti ti-scissors"></i><span>Serviços</span></div>
+      <div class="nav-item" onclick="goTo('reports',this)"><i class="ti ti-chart-bar"></i><span>Relatórios</span></div>
     </div>
     <div class="sidebar-user">
       <div class="user-avatar" id="sidebar-avatar">A</div>
-      <div>
-        <div class="user-name" id="sidebar-name">Admin</div>
-        <div class="user-role">Administrador</div>
-      </div>
-      <button class="btn-logout" onclick="doLogout()" title="Sair">
-        <i class="ti ti-logout"></i>
-      </button>
+      <div><div class="user-name" id="sidebar-name">Admin</div><div class="user-role">Administrador</div></div>
+      <button class="btn-logout" onclick="doLogout()" title="Sair"><i class="ti ti-logout"></i></button>
     </div>
   </nav>
 
-  <!-- Main -->
+  <!-- Main content -->
   <div class="main">
     <div class="topbar">
       <div class="topbar-left">
@@ -412,58 +375,65 @@
     </div>
     <div class="page" id="page-content"></div>
   </div>
+
+  <!-- Mobile bottom nav -->
+  <nav class="bottom-nav">
+    <div class="bn-item active" data-page="dashboard" onclick="goToMobile('dashboard',this)">
+      <i class="ti ti-layout-dashboard"></i><span>Início</span>
+    </div>
+    <div class="bn-item" data-page="materials" onclick="goToMobile('materials',this)">
+      <i class="ti ti-package"></i><span>Estoque</span>
+      <span class="bn-badge" id="badge-low-mob" style="display:none">0</span>
+    </div>
+    <div class="bn-item" data-page="services" onclick="goToMobile('services',this)">
+      <i class="ti ti-scissors"></i><span>Serviços</span>
+    </div>
+    <div class="bn-item" data-page="reports" onclick="goToMobile('reports',this)">
+      <i class="ti ti-chart-bar"></i><span>Relatórios</span>
+    </div>
+    <div class="bn-item" onclick="doLogout()">
+      <i class="ti ti-logout"></i><span>Sair</span>
+    </div>
+  </nav>
+
+  <!-- FAB -->
+  <button class="fab hidden" id="fab" onclick="fabAction()"><i class="ti ti-plus"></i></button>
 </div>
 
-<!-- MODALS -->
+<!-- ── MODAL: Material ── -->
 <div class="modal-overlay" id="modal-material">
   <div class="modal">
+    <div class="modal-handle"></div>
     <div class="modal-header">
       <div class="modal-title" id="modal-mat-title">Novo material</div>
       <button class="modal-close" onclick="closeModal('modal-material')"><i class="ti ti-x"></i></button>
     </div>
-    <div class="form-group">
-      <label>Nome do material</label>
-      <input type="text" id="mat-name" placeholder="Ex: Insufilme G5">
-    </div>
+    <div class="form-group"><label>Nome do material</label><input type="text" id="mat-name" placeholder="Ex: Insufilme G5" autocomplete="off"></div>
     <div class="form-group">
       <label>Tipo</label>
-      <select id="mat-type">
-        <option>Insufilme</option><option>PPF</option><option>Vinil</option><option>Película Solar</option><option>Outro</option>
-      </select>
+      <select id="mat-type"><option>Insufilme</option><option>PPF</option><option>Vinil</option><option>Película Solar</option><option>Outro</option></select>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label>Total comprado (m)</label>
-        <input type="number" id="mat-total" min="0" step="0.1" placeholder="50">
-      </div>
-      <div class="form-group">
-        <label>Disponível atual (m)</label>
-        <input type="number" id="mat-current" min="0" step="0.1" placeholder="Igual ao total">
-      </div>
+      <div class="form-group"><label>Total comprado (m)</label><input type="number" id="mat-total" min="0" step="0.1" placeholder="50" inputmode="decimal"></div>
+      <div class="form-group"><label>Disponível atual (m)</label><input type="number" id="mat-current" min="0" step="0.1" placeholder="= Total" inputmode="decimal"></div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label>Custo por metro (R$)</label>
-        <input type="number" id="mat-cost" min="0" step="0.01" placeholder="12.50">
-      </div>
-      <div class="form-group">
-        <label>Alerta abaixo de (m)</label>
-        <input type="number" id="mat-min" min="0" step="0.5" placeholder="10">
-      </div>
+      <div class="form-group"><label>Custo por metro (R$)</label><input type="number" id="mat-cost" min="0" step="0.01" placeholder="12,50" inputmode="decimal"></div>
+      <div class="form-group"><label>Alerta abaixo de (m)</label><input type="number" id="mat-min" min="0" step="0.5" placeholder="10" inputmode="decimal"></div>
     </div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('modal-material')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveMaterial()">
-        <i class="ti ti-check"></i> Salvar material
-      </button>
+      <button class="btn btn-primary" onclick="saveMaterial()"><i class="ti ti-check"></i> Salvar</button>
     </div>
   </div>
 </div>
 
+<!-- ── MODAL: Serviço ── -->
 <div class="modal-overlay" id="modal-service">
   <div class="modal">
+    <div class="modal-handle"></div>
     <div class="modal-header">
-      <div class="modal-title">Registrar uso de material</div>
+      <div class="modal-title">Registrar uso</div>
       <button class="modal-close" onclick="closeModal('modal-service')"><i class="ti ti-x"></i></button>
     </div>
     <div id="service-err" style="display:none" class="alert-banner">
@@ -472,496 +442,454 @@
     </div>
     <div class="form-group">
       <label>Material</label>
-      <select id="svc-material" onchange="updateServicePreview()">
-        <option value="">Selecione o material...</option>
-      </select>
+      <select id="svc-material" onchange="updateServicePreview()"><option value="">Selecione...</option></select>
     </div>
     <div class="form-group">
       <label>Metros utilizados</label>
-      <input type="number" id="svc-meters" min="0.1" step="0.1" placeholder="Ex: 4.5" oninput="updateServicePreview()">
+      <input type="number" id="svc-meters" min="0.1" step="0.1" placeholder="Ex: 4.5" oninput="updateServicePreview()" inputmode="decimal">
     </div>
     <div id="svc-preview" class="cost-preview" style="display:none">
       <div class="cost-row"><span class="lbl">Custo estimado</span><span class="val" id="prev-cost">R$ 0,00</span></div>
       <div class="cost-row"><span class="lbl">Restará em estoque</span><span class="val" id="prev-remaining">—</span></div>
     </div>
-    <div class="form-group">
-      <label>Descrição (opcional)</label>
-      <input type="text" id="svc-desc" placeholder="Ex: Honda Civic completo, lateral direita...">
-    </div>
+    <div class="form-group"><label>Descrição (opcional)</label><input type="text" id="svc-desc" placeholder="Ex: Honda Civic, lateral direita..." autocomplete="off"></div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('modal-service')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveService()">
-        <i class="ti ti-scissors"></i> Registrar uso
-      </button>
+      <button class="btn btn-primary" onclick="saveService()"><i class="ti ti-scissors"></i> Registrar</button>
     </div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-// ─── Data ───────────────────────────────────────────────
-const KEY = 'insufilm_pro_v2';
-let DB = load();
-let editingId = null;
-let chartInstance = null;
+// ── DATA ──────────────────────────────────────
+const KEY='insufilm_pro_v3';
+let DB=load(),editingId=null,chartInst=null,currentPage='dashboard';
 
-function load() {
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  return {
-    userName: 'Admin',
-    materials: [
-      { id: m(), name: 'Insufilme G5', type: 'Insufilme', total: 50, current: 8.5, cost: 12.50, min: 10 },
-      { id: m(), name: 'Insufilme G20', type: 'Insufilme', total: 80, current: 42, cost: 14.00, min: 15 },
-      { id: m(), name: 'Insufilme G35', type: 'Insufilme', total: 60, current: 3, cost: 11.00, min: 10 },
-      { id: m(), name: 'PPF Transparente', type: 'PPF', total: 30, current: 18, cost: 45.00, min: 8 },
-      { id: m(), name: 'Vinil Branco Fosco', type: 'Vinil', total: 40, current: 25, cost: 8.50, min: 10 },
+function load(){
+  try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}
+  return{
+    userName:'Admin',
+    materials:[
+      {id:uid(),name:'Insufilme G5',type:'Insufilme',total:50,current:8.5,cost:12.50,min:10},
+      {id:uid(),name:'Insufilme G20',type:'Insufilme',total:80,current:42,cost:14.00,min:15},
+      {id:uid(),name:'Insufilme G35',type:'Insufilme',total:60,current:3,cost:11.00,min:10},
+      {id:uid(),name:'PPF Transparente',type:'PPF',total:30,current:18,cost:45.00,min:8},
+      {id:uid(),name:'Vinil Branco Fosco',type:'Vinil',total:40,current:25,cost:8.50,min:10},
     ],
-    services: [
-      { id: m(), matId: '', matName: 'Insufilme G20', meters: 6, cost: 84, desc: 'Sedã completo', date: new Date(Date.now()-86400000*2).toISOString() },
-      { id: m(), matId: '', matName: 'PPF Transparente', meters: 3.5, cost: 157.50, desc: 'Capô + retrovisores', date: new Date(Date.now()-86400000).toISOString() },
-      { id: m(), matId: '', matName: 'Insufilme G5', meters: 4, cost: 50, desc: 'SUV completo', date: new Date(Date.now()-3600000*4).toISOString() },
+    services:[
+      {id:uid(),matId:'',matName:'Insufilme G20',meters:6,cost:84,desc:'Sedã completo',date:new Date(Date.now()-86400000*2).toISOString()},
+      {id:uid(),matId:'',matName:'PPF Transparente',meters:3.5,cost:157.50,desc:'Capô + retrovisores',date:new Date(Date.now()-86400000).toISOString()},
+      {id:uid(),matId:'',matName:'Insufilme G5',meters:4,cost:50,desc:'SUV completo',date:new Date(Date.now()-14400000).toISOString()},
     ]
   };
 }
-function save() { localStorage.setItem(KEY, JSON.stringify(DB)); }
-function m() { return Math.random().toString(36).slice(2)+Date.now(); }
-function fmt(n) { return Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-function fmtM(n) { return Number(n).toFixed(1)+'m'; }
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}}
+function uid(){return Math.random().toString(36).slice(2)+Date.now();}
+function fmt(n){return Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtM(n){return Number(n).toFixed(1)+'m';}
+function fmtDate(iso){const d=new Date(iso);return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+function isMobile(){return window.innerWidth<=640;}
 
-function status(mat) {
-  if (mat.current <= 0) return 'critical';
-  if (mat.current <= mat.min) return mat.current <= mat.min * 0.5 ? 'critical' : 'low';
-  return 'ok';
+function st(mat){
+  if(mat.current<=0)return'critical';
+  if(mat.current<=mat.min)return mat.current<=mat.min*.5?'critical':'low';
+  return'ok';
 }
-function statusBadge(mat) {
-  const s = status(mat);
-  if (s === 'ok') return `<span class="badge badge-ok"><i class="ti ti-circle-check"></i> OK</span>`;
-  if (s === 'low') return `<span class="badge badge-low"><i class="ti ti-alert-triangle"></i> Baixo</span>`;
-  return `<span class="badge badge-critical"><i class="ti ti-alert-circle"></i> Crítico</span>`;
+function statusBadge(mat){
+  const s=st(mat);
+  if(s==='ok')return`<span class="badge badge-ok"><i class="ti ti-circle-check"></i> OK</span>`;
+  if(s==='low')return`<span class="badge badge-low"><i class="ti ti-alert-triangle"></i> Baixo</span>`;
+  return`<span class="badge badge-critical"><i class="ti ti-alert-circle"></i> Crítico</span>`;
 }
-function progressBar(mat) {
-  const pct = Math.max(0, Math.min(100, (mat.current / mat.total) * 100));
-  const s = status(mat);
-  const color = s === 'ok' ? '#00d4a0' : s === 'low' ? '#f5a623' : '#ff5c5c';
-  return `<div class="progress-wrap"><div class="progress-fill" style="width:${pct.toFixed(1)}%;background:${color}"></div></div>
-          <div style="font-size:11px;color:var(--text3);margin-top:2px">${pct.toFixed(0)}%</div>`;
+function progressBar(mat,w=''){
+  const pct=Math.max(0,Math.min(100,(mat.current/mat.total)*100));
+  const s=st(mat),color=s==='ok'?'#00d4a0':s==='low'?'#f5a623':'#ff5c5c';
+  return`<div class="progress-wrap" style="${w?'width:'+w:''}">`+
+    `<div class="progress-fill" style="width:${pct.toFixed(1)}%;background:${color}"></div></div>`;
 }
 
-// ─── Auth ───────────────────────────────────────────────
-function doLogin() {
-  const user = document.getElementById('login-user').value.trim() || 'Admin';
-  DB.userName = user;
-  document.getElementById('login-page').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  document.getElementById('sidebar-name').textContent = user;
-  document.getElementById('sidebar-avatar').textContent = user[0].toUpperCase();
-  save();
+// ── AUTH ──────────────────────────────────────
+function doLogin(){
+  const user=document.getElementById('login-user').value.trim()||'Admin';
+  DB.userName=user;save();
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('sidebar-name').textContent=user;
+  document.getElementById('sidebar-avatar').textContent=user[0].toUpperCase();
   renderPage('dashboard');
 }
-function doLogout() {
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('login-page').style.display = 'flex';
+function doLogout(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-page').style.display='flex';
 }
 
-// ─── Navigation ─────────────────────────────────────────
-const pageTitles = {
-  dashboard: ['Dashboard','Visão geral do estoque'],
-  materials: ['Materiais','Gerencie os rolos e materiais'],
-  services: ['Serviços','Histórico de cortes e uso'],
-  reports: ['Relatórios','Análise de consumo e custos']
+// ── NAV ──────────────────────────────────────
+const pageMeta={
+  dashboard:['Dashboard','Visão geral do estoque'],
+  materials:['Materiais','Gerencie rolos e materiais'],
+  services:['Serviços','Histórico de cortes'],
+  reports:['Relatórios','Análise de consumo']
 };
+const fabPages=['materials','services'];
 
-function goTo(page, el) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  el.classList.add('active');
+function goTo(page,el){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
   renderPage(page);
 }
-function renderPage(page) {
-  const [title, sub] = pageTitles[page];
-  document.getElementById('page-title').textContent = title;
-  document.getElementById('page-sub').textContent = sub;
-  updateBadge();
-  if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
-  const actions = document.getElementById('topbar-actions');
-  actions.innerHTML = '';
-  const content = document.getElementById('page-content');
-  content.innerHTML = '';
-  if (page === 'dashboard') { renderDashboard(); }
-  else if (page === 'materials') {
-    actions.innerHTML = `<button class="btn btn-primary" onclick="openAddMaterial()"><i class="ti ti-plus"></i> Novo material</button>`;
-    renderMaterials();
-  }
-  else if (page === 'services') {
-    actions.innerHTML = `<button class="btn btn-primary" onclick="openService()"><i class="ti ti-scissors"></i> Registrar uso</button>`;
-    renderServices();
-  }
-  else if (page === 'reports') renderReports();
+function goToMobile(page,el){
+  document.querySelectorAll('.bn-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+  renderPage(page);
+}
+function syncNav(page){
+  // desktop
+  document.querySelectorAll('.nav-item[onclick]').forEach(n=>{
+    const p=n.getAttribute('onclick').match(/'(\w+)'/)?.[1];
+    n.classList.toggle('active',p===page);
+  });
+  // mobile
+  document.querySelectorAll('.bn-item[data-page]').forEach(n=>{
+    n.classList.toggle('active',n.dataset.page===page);
+  });
+  // FAB
+  const fab=document.getElementById('fab');
+  if(isMobile()&&fabPages.includes(page)){fab.classList.remove('hidden');}
+  else{fab.classList.add('hidden');}
+}
+function fabAction(){
+  if(currentPage==='materials')openAddMaterial();
+  else if(currentPage==='services')openService();
+}
+function updateBadge(){
+  const low=DB.materials.filter(m=>st(m)!=='ok').length;
+  ['badge-low-desk','badge-low-mob'].forEach(id=>{
+    const b=document.getElementById(id);if(!b)return;
+    b.textContent=low;b.style.display=low>0?'':'none';
+  });
 }
 
-function updateBadge() {
-  const low = DB.materials.filter(m => status(m) !== 'ok').length;
-  const b = document.getElementById('badge-low');
-  b.textContent = low; b.style.display = low > 0 ? '' : 'none';
+function renderPage(page){
+  currentPage=page;
+  const[title,sub]=pageMeta[page];
+  document.getElementById('page-title').textContent=title;
+  document.getElementById('page-sub').textContent=sub;
+  updateBadge();syncNav(page);
+  if(chartInst){chartInst.destroy();chartInst=null;}
+  const actions=document.getElementById('topbar-actions');
+  actions.innerHTML='';
+  if(page==='materials')actions.innerHTML=`<button class="btn btn-primary btn-sm" onclick="openAddMaterial()"><i class="ti ti-plus"></i> Novo material</button>`;
+  else if(page==='services')actions.innerHTML=`<button class="btn btn-primary btn-sm" onclick="openService()"><i class="ti ti-scissors"></i> Registrar uso</button>`;
+  document.getElementById('page-content').innerHTML='';
+  if(page==='dashboard')renderDashboard();
+  else if(page==='materials')renderMaterials();
+  else if(page==='services')renderServices();
+  else if(page==='reports')renderReports();
+  document.getElementById('page-content').scrollTop=0;
 }
 
-// ─── Dashboard ──────────────────────────────────────────
-function renderDashboard() {
-  const el = document.getElementById('page-content');
-  const low = DB.materials.filter(m => status(m) !== 'ok');
-  const totalCost = DB.services.reduce((a,s)=>a+s.cost,0);
-  const recent = [...DB.services].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
+// ── DASHBOARD ────────────────────────────────
+function renderDashboard(){
+  const el=document.getElementById('page-content');
+  const low=DB.materials.filter(m=>st(m)!=='ok');
+  const totalCost=DB.services.reduce((a,s)=>a+s.cost,0);
+  const recent=[...DB.services].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
+  let alert='';
+  if(low.length>0){
+    alert=`<div class="alert-banner"><i class="ti ti-alert-triangle"></i>
+      <div class="alert-banner-text"><strong>${low.length} material(is) com estoque baixo</strong>
+      <span>${low.map(m=>m.name).join(', ')}</span></div></div>`;}
 
-  let alert = '';
-  if (low.length > 0) {
-    const names = low.map(m=>`<strong>${m.name}</strong>`).join(', ');
-    alert = `<div class="alert-banner">
-      <i class="ti ti-alert-triangle"></i>
-      <div class="alert-banner-text">
-        <strong>${low.length} material(is) com estoque baixo</strong>
-        <span>${names}</span>
-      </div>
-    </div>`;
-  }
-
-  el.innerHTML = `<div class="page-section">
-    ${alert}
+  el.innerHTML=`<div class="page-section">${alert}
     <div class="metric-grid">
-      <div class="metric-card green">
-        <div class="metric-icon green"><i class="ti ti-package"></i></div>
-        <div class="metric-label">Materiais</div>
-        <div class="metric-value">${DB.materials.length}</div>
-        <div class="metric-sub">${[...new Set(DB.materials.map(m=>m.type))].length} tipos</div>
-      </div>
-      <div class="metric-card red">
-        <div class="metric-icon red"><i class="ti ti-alert-circle"></i></div>
-        <div class="metric-label">Estoque baixo</div>
-        <div class="metric-value" style="${low.length>0?'color:var(--red)':''}">${low.length}</div>
-        <div class="metric-sub">materiais em alerta</div>
-      </div>
-      <div class="metric-card blue">
-        <div class="metric-icon blue"><i class="ti ti-scissors"></i></div>
-        <div class="metric-label">Serviços</div>
-        <div class="metric-value">${DB.services.length}</div>
-        <div class="metric-sub">registrados</div>
-      </div>
-      <div class="metric-card amber">
-        <div class="metric-icon amber"><i class="ti ti-currency-dollar"></i></div>
-        <div class="metric-label">Custo total</div>
-        <div class="metric-value sm">R$&nbsp;${fmt(totalCost)}</div>
-        <div class="metric-sub">em materiais</div>
-      </div>
+      <div class="metric-card green"><div class="metric-icon green"><i class="ti ti-package"></i></div><div class="metric-label">Materiais</div><div class="metric-value">${DB.materials.length}</div><div class="metric-sub">${[...new Set(DB.materials.map(m=>m.type))].length} tipos</div></div>
+      <div class="metric-card red"><div class="metric-icon red"><i class="ti ti-alert-circle"></i></div><div class="metric-label">Estoque baixo</div><div class="metric-value" style="${low.length>0?'color:var(--red)':''}">${low.length}</div><div class="metric-sub">em alerta</div></div>
+      <div class="metric-card blue"><div class="metric-icon blue"><i class="ti ti-scissors"></i></div><div class="metric-label">Serviços</div><div class="metric-value">${DB.services.length}</div><div class="metric-sub">registrados</div></div>
+      <div class="metric-card amber"><div class="metric-icon amber"><i class="ti ti-currency-dollar"></i></div><div class="metric-label">Custo total</div><div class="metric-value sm">R$&nbsp;${fmt(totalCost)}</div><div class="metric-sub">em materiais</div></div>
     </div>
     <div class="two-col">
       <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title"><i class="ti ti-chart-bar"></i> Materiais mais utilizados</div>
-        </div>
-        <div class="chart-wrap">
-          <canvas id="dash-chart" role="img" aria-label="Gráfico de materiais mais utilizados por metragem">Dados de consumo de materiais</canvas>
-        </div>
+        <div class="panel-header"><div class="panel-title"><i class="ti ti-chart-bar"></i> Mais utilizados</div></div>
+        <div class="chart-wrap"><canvas id="dash-chart" role="img" aria-label="Materiais mais utilizados em metros">Dados de consumo</canvas></div>
       </div>
       <div class="panel">
-        <div class="panel-header"><div class="panel-title"><i class="ti ti-clock"></i> Serviços recentes</div></div>
-        ${recent.length === 0
-          ? `<div class="empty-state"><i class="ti ti-scissors"></i><p>Nenhum serviço ainda</p></div>`
-          : `<div class="table-wrap"><table>
-              <thead><tr><th>Material</th><th>Metros</th><th>Custo</th></tr></thead>
-              <tbody>${recent.map(s=>`<tr>
-                <td>${s.matName}</td>
-                <td class="mono">${fmtM(s.meters)}</td>
-                <td class="mono" style="color:var(--accent)">R$ ${fmt(s.cost)}</td>
-              </tr>`).join('')}</tbody>
-            </table></div>`}
+        <div class="panel-header"><div class="panel-title"><i class="ti ti-clock"></i> Recentes</div></div>
+        ${recent.length===0?`<div class="empty-state"><i class="ti ti-scissors"></i><p>Nenhum serviço ainda</p></div>`:
+        `<div class="table-wrap desktop-table"><table><thead><tr><th>Material</th><th>Metros</th><th>Custo</th></tr></thead><tbody>
+        ${recent.map(s=>`<tr><td>${s.matName}</td><td class="mono">${fmtM(s.meters)}</td><td class="mono" style="color:var(--accent)">R$ ${fmt(s.cost)}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="svc-list" style="display:flex">
+        ${recent.map(s=>`<div class="svc-card"><div class="svc-card-header"><span class="svc-card-name">${s.matName}</span><span class="svc-card-cost">R$ ${fmt(s.cost)}</span></div><div class="svc-card-meta">${fmtM(s.meters)} · ${fmtDate(s.date)}</div></div>`).join('')}
+        </div>`}
       </div>
     </div>
   </div>`;
 
-  // Chart
-  const usage = {};
-  DB.services.forEach(s => { usage[s.matName] = (usage[s.matName]||0)+s.meters; });
-  const top = Object.entries(usage).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  if (top.length > 0) {
-    chartInstance = new Chart(document.getElementById('dash-chart'), {
-      type: 'bar',
-      data: {
-        labels: top.map(([n])=>n.length>14?n.slice(0,14)+'…':n),
-        datasets: [{ label: 'Metros', data: top.map(([,v])=>v), backgroundColor: '#00d4a0', borderRadius: 5, hoverBackgroundColor: '#00a87e' }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a5b6e', font: { family: 'DM Mono', size: 11 } } },
-          x: { grid: { display: false }, ticks: { color: '#9b9cb0', font: { family: 'DM Sans', size: 11 } } }
-        }
-      }
+  const usage={};
+  DB.services.forEach(s=>{usage[s.matName]=(usage[s.matName]||0)+s.meters;});
+  const top=Object.entries(usage).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  if(top.length>0){
+    chartInst=new Chart(document.getElementById('dash-chart'),{
+      type:'bar',
+      data:{labels:top.map(([n])=>n.length>14?n.slice(0,13)+'…':n),datasets:[{label:'Metros',data:top.map(([,v])=>v),backgroundColor:'#00d4a0',borderRadius:4,hoverBackgroundColor:'#00a87e'}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+        y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5a5b6e',font:{family:'DM Mono',size:10}}},
+        x:{grid:{display:false},ticks:{color:'#9b9cb0',font:{family:'DM Sans',size:10},maxRotation:30}}
+      }}
     });
   }
 }
 
-// ─── Materials ──────────────────────────────────────────
-function renderMaterials() {
-  const el = document.getElementById('page-content');
-  if (DB.materials.length === 0) {
-    el.innerHTML = `<div class="panel"><div class="empty-state"><i class="ti ti-package"></i><p>Nenhum material cadastrado.<br>Clique em "Novo material" para começar.</p></div></div>`;
-    return;
+// ── MATERIALS ────────────────────────────────
+function renderMaterials(){
+  const el=document.getElementById('page-content');
+  if(DB.materials.length===0){
+    el.innerHTML=`<div class="panel"><div class="empty-state"><i class="ti ti-package"></i><p>Nenhum material.<br>Toque em + para adicionar.</p></div></div>`;return;
   }
-  el.innerHTML = `<div class="page-section"><div class="panel">
+  // Mobile card list
+  const mobileCards=DB.materials.map(mat=>{
+    const pct=Math.max(0,Math.min(100,(mat.current/mat.total)*100));
+    const s=st(mat),color=s==='ok'?'#00d4a0':s==='low'?'#f5a623':'#ff5c5c';
+    return`<div class="mat-card">
+      <div class="mat-card-info">
+        <div class="mat-card-name">${mat.name}</div>
+        <div class="mat-card-meta">
+          ${progressBar(mat,'100%')}
+          <div class="mat-card-sub">${fmtM(mat.current)} / ${fmtM(mat.total)} · R$${fmt(mat.cost)}/m</div>
+        </div>
+      </div>
+      <div class="mat-card-right">
+        ${statusBadge(mat)}
+        <div class="mat-card-actions">
+          <button class="btn btn-icon btn-sm" onclick="openEditMaterial('${mat.id}')"><i class="ti ti-edit"></i></button>
+          <button class="btn btn-icon btn-sm btn-danger" onclick="deleteMaterial('${mat.id}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML=`<div class="page-section"><div class="panel">
     <div class="panel-header">
-      <div class="panel-title"><i class="ti ti-package"></i> ${DB.materials.length} materiais cadastrados</div>
+      <div class="panel-title"><i class="ti ti-package"></i> ${DB.materials.length} materiais</div>
+      <button class="btn btn-primary btn-sm" onclick="openAddMaterial()" style="display:none" id="btn-add-mat-panel"><i class="ti ti-plus"></i> Novo</button>
     </div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Material</th><th>Tipo</th><th>Disponível</th><th>Estoque</th><th>R$/metro</th><th>Alerta</th><th>Status</th><th></th></tr></thead>
+    <div class="table-wrap desktop-table"><table>
+      <thead><tr><th>Material</th><th>Tipo</th><th>Disponível</th><th>Estoque</th><th>R$/m</th><th>Alerta</th><th>Status</th><th></th></tr></thead>
       <tbody id="mat-tbody"></tbody>
     </table></div>
+    <div class="mat-list">${mobileCards}</div>
   </div></div>`;
-  const tbody = document.getElementById('mat-tbody');
-  DB.materials.forEach(mat => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${mat.name}</td>
+
+  const tbody=document.getElementById('mat-tbody');
+  DB.materials.forEach(mat=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${mat.name}</td>
       <td><span class="badge-type">${mat.type}</span></td>
       <td class="mono">${fmtM(mat.current)} <span style="color:var(--text3);font-size:11px">/ ${fmtM(mat.total)}</span></td>
-      <td style="min-width:110px">${progressBar(mat)}</td>
+      <td style="min-width:110px">${progressBar(mat)}<span style="font-size:10px;color:var(--text3)">${((mat.current/mat.total)*100).toFixed(0)}%</span></td>
       <td class="mono">R$ ${fmt(mat.cost)}</td>
       <td class="mono" style="color:var(--text3)">${fmtM(mat.min)}</td>
       <td>${statusBadge(mat)}</td>
-      <td>
-        <div style="display:flex;gap:4px">
-          <button class="btn btn-icon btn-sm" title="Editar" onclick="openEditMaterial('${mat.id}')"><i class="ti ti-edit"></i></button>
-          <button class="btn btn-icon btn-sm btn-danger" title="Remover" onclick="deleteMaterial('${mat.id}')"><i class="ti ti-trash"></i></button>
-        </div>
-      </td>`;
+      <td><div style="display:flex;gap:4px">
+        <button class="btn btn-icon btn-sm" onclick="openEditMaterial('${mat.id}')"><i class="ti ti-edit"></i></button>
+        <button class="btn btn-icon btn-sm btn-danger" onclick="deleteMaterial('${mat.id}')"><i class="ti ti-trash"></i></button>
+      </div></td>`;
     tbody.appendChild(tr);
   });
 }
 
-function openAddMaterial() {
-  editingId = null;
-  document.getElementById('modal-mat-title').textContent = 'Novo material';
-  document.getElementById('mat-name').value = '';
-  document.getElementById('mat-type').value = 'Insufilme';
-  document.getElementById('mat-total').value = '';
-  document.getElementById('mat-current').value = '';
-  document.getElementById('mat-cost').value = '';
-  document.getElementById('mat-min').value = '';
+function openAddMaterial(){
+  editingId=null;
+  document.getElementById('modal-mat-title').textContent='Novo material';
+  ['mat-name','mat-total','mat-current','mat-cost','mat-min'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('mat-type').value='Insufilme';
   openModal('modal-material');
 }
-
-function openEditMaterial(id) {
-  editingId = id;
-  const mat = DB.materials.find(m=>m.id===id);
-  if (!mat) return;
-  document.getElementById('modal-mat-title').textContent = 'Editar material';
-  document.getElementById('mat-name').value = mat.name;
-  document.getElementById('mat-type').value = mat.type;
-  document.getElementById('mat-total').value = mat.total;
-  document.getElementById('mat-current').value = mat.current;
-  document.getElementById('mat-cost').value = mat.cost;
-  document.getElementById('mat-min').value = mat.min;
+function openEditMaterial(id){
+  editingId=id;const mat=DB.materials.find(m=>m.id===id);if(!mat)return;
+  document.getElementById('modal-mat-title').textContent='Editar material';
+  document.getElementById('mat-name').value=mat.name;
+  document.getElementById('mat-type').value=mat.type;
+  document.getElementById('mat-total').value=mat.total;
+  document.getElementById('mat-current').value=mat.current;
+  document.getElementById('mat-cost').value=mat.cost;
+  document.getElementById('mat-min').value=mat.min;
   openModal('modal-material');
 }
-
-function saveMaterial() {
-  const name = document.getElementById('mat-name').value.trim();
-  const type = document.getElementById('mat-type').value;
-  const total = parseFloat(document.getElementById('mat-total').value);
-  const costV = parseFloat(document.getElementById('mat-cost').value);
-  const min = parseFloat(document.getElementById('mat-min').value) || 10;
-  let current = parseFloat(document.getElementById('mat-current').value);
-  if (!name || isNaN(total) || isNaN(costV)) { alert('Preencha nome, total e custo.'); return; }
-  if (isNaN(current)) current = total;
-  if (editingId) {
-    DB.materials = DB.materials.map(m => m.id===editingId ? {...m,name,type,total,current,cost:costV,min} : m);
-  } else {
-    DB.materials.push({ id: m(), name, type, total, current, cost: costV, min });
+function saveMaterial(){
+  const name=document.getElementById('mat-name').value.trim();
+  const type=document.getElementById('mat-type').value;
+  const total=parseFloat(document.getElementById('mat-total').value);
+  const costV=parseFloat(document.getElementById('mat-cost').value);
+  const min=parseFloat(document.getElementById('mat-min').value)||10;
+  let current=parseFloat(document.getElementById('mat-current').value);
+  if(!name||isNaN(total)||isNaN(costV)){alert('Preencha nome, total e custo.');return;}
+  if(isNaN(current))current=total;
+  if(editingId){
+    DB.materials=DB.materials.map(m=>m.id===editingId?{...m,name,type,total,current,cost:costV,min}:m);
+  }else{
+    DB.materials.push({id:uid(),name,type,total,current,cost:costV,min});
   }
-  save(); closeModal('modal-material'); renderPage('materials');
+  save();closeModal('modal-material');renderPage('materials');
+}
+function deleteMaterial(id){
+  if(!confirm('Remover este material?'))return;
+  DB.materials=DB.materials.filter(m=>m.id!==id);
+  save();renderPage('materials');
 }
 
-function deleteMaterial(id) {
-  if (!confirm('Remover este material? O histórico de serviços será mantido.')) return;
-  DB.materials = DB.materials.filter(m=>m.id!==id);
-  save(); renderPage('materials');
-}
-
-// ─── Services ───────────────────────────────────────────
-function renderServices() {
-  const el = document.getElementById('page-content');
-  const sorted = [...DB.services].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if (sorted.length === 0) {
-    el.innerHTML = `<div class="panel"><div class="empty-state"><i class="ti ti-scissors"></i><p>Nenhum serviço registrado ainda.<br>Clique em "Registrar uso" para começar.</p></div></div>`;
-    return;
+// ── SERVICES ─────────────────────────────────
+function renderServices(){
+  const el=document.getElementById('page-content');
+  const sorted=[...DB.services].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(sorted.length===0){
+    el.innerHTML=`<div class="panel"><div class="empty-state"><i class="ti ti-scissors"></i><p>Nenhum serviço ainda.<br>Toque em + para registrar.</p></div></div>`;return;
   }
-  el.innerHTML = `<div class="page-section"><div class="panel">
-    <div class="panel-header">
-      <div class="panel-title"><i class="ti ti-scissors"></i> ${sorted.length} serviços registrados</div>
-    </div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Data / Hora</th><th>Material</th><th>Metros</th><th>Custo material</th><th>Descrição</th></tr></thead>
+  const mobileList=sorted.map(s=>`<div class="svc-card">
+    <div class="svc-card-header"><span class="svc-card-name">${s.matName}</span><span class="svc-card-cost">R$ ${fmt(s.cost)}</span></div>
+    <div class="svc-card-meta">${fmtM(s.meters)} utilizados · ${fmtDate(s.date)}</div>
+    ${s.desc?`<div class="svc-card-meta" style="margin-top:2px;color:var(--text2)">${s.desc}</div>`:''}
+  </div>`).join('');
+
+  el.innerHTML=`<div class="page-section"><div class="panel">
+    <div class="panel-header"><div class="panel-title"><i class="ti ti-scissors"></i> ${sorted.length} serviços</div></div>
+    <div class="table-wrap desktop-table"><table>
+      <thead><tr><th>Data</th><th>Material</th><th>Metros</th><th>Custo</th><th>Descrição</th></tr></thead>
       <tbody>${sorted.map(s=>`<tr>
-        <td class="mono" style="color:var(--text3);font-size:11.5px">${new Date(s.date).toLocaleDateString('pt-BR')} ${new Date(s.date).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
+        <td class="mono" style="color:var(--text3);font-size:11px;white-space:nowrap">${fmtDate(s.date)}</td>
         <td>${s.matName}</td>
         <td class="mono">${fmtM(s.meters)}</td>
         <td class="mono" style="color:var(--accent);font-weight:600">R$ ${fmt(s.cost)}</td>
         <td style="color:var(--text3)">${s.desc||'—'}</td>
       </tr>`).join('')}</tbody>
     </table></div>
+    <div class="svc-list">${mobileList}</div>
   </div></div>`;
 }
 
-function openService() {
-  document.getElementById('service-err').style.display = 'none';
-  document.getElementById('svc-meters').value = '';
-  document.getElementById('svc-desc').value = '';
-  document.getElementById('svc-preview').style.display = 'none';
-  const sel = document.getElementById('svc-material');
-  sel.innerHTML = '<option value="">Selecione o material...</option>';
-  DB.materials.forEach(mat => {
-    const op = document.createElement('option');
-    op.value = mat.id;
-    op.textContent = `${mat.name} (${fmtM(mat.current)} disponível)`;
-    if (mat.current <= 0) { op.disabled = true; op.textContent += ' — SEM ESTOQUE'; }
+function openService(){
+  document.getElementById('service-err').style.display='none';
+  document.getElementById('svc-meters').value='';
+  document.getElementById('svc-desc').value='';
+  document.getElementById('svc-preview').style.display='none';
+  const sel=document.getElementById('svc-material');
+  sel.innerHTML='<option value="">Selecione...</option>';
+  DB.materials.forEach(mat=>{
+    const op=document.createElement('option');
+    op.value=mat.id;
+    op.textContent=`${mat.name} (${fmtM(mat.current)} disponível)`;
+    if(mat.current<=0){op.disabled=true;op.textContent+=' — SEM ESTOQUE';}
     sel.appendChild(op);
   });
   openModal('modal-service');
 }
-
-function updateServicePreview() {
-  const matId = document.getElementById('svc-material').value;
-  const meters = parseFloat(document.getElementById('svc-meters').value);
-  const prev = document.getElementById('svc-preview');
-  if (!matId || isNaN(meters) || meters <= 0) { prev.style.display = 'none'; return; }
-  const mat = DB.materials.find(m=>m.id===matId);
-  if (!mat) return;
-  const cost = mat.cost * meters;
-  const rem = mat.current - meters;
-  prev.style.display = '';
-  document.getElementById('prev-cost').textContent = 'R$ ' + fmt(cost);
-  const remEl = document.getElementById('prev-remaining');
-  remEl.textContent = fmtM(Math.max(0, rem));
-  remEl.style.color = rem < 0 ? 'var(--red)' : rem <= mat.min ? 'var(--amber)' : 'var(--accent)';
+function updateServicePreview(){
+  const matId=document.getElementById('svc-material').value;
+  const meters=parseFloat(document.getElementById('svc-meters').value);
+  const prev=document.getElementById('svc-preview');
+  if(!matId||isNaN(meters)||meters<=0){prev.style.display='none';return;}
+  const mat=DB.materials.find(m=>m.id===matId);if(!mat)return;
+  const rem=mat.current-meters;
+  prev.style.display='';
+  document.getElementById('prev-cost').textContent='R$ '+fmt(mat.cost*meters);
+  const remEl=document.getElementById('prev-remaining');
+  remEl.textContent=fmtM(Math.max(0,rem));
+  remEl.style.color=rem<0?'var(--red)':rem<=mat.min?'var(--amber)':'var(--accent)';
+}
+function saveService(){
+  const matId=document.getElementById('svc-material').value;
+  const meters=parseFloat(document.getElementById('svc-meters').value);
+  const desc=document.getElementById('svc-desc').value.trim();
+  const errEl=document.getElementById('service-err');
+  errEl.style.display='none';
+  if(!matId||isNaN(meters)||meters<=0){
+    document.getElementById('service-err-msg').textContent='Selecione o material e informe a metragem.';
+    errEl.style.display='flex';return;
+  }
+  const mat=DB.materials.find(m=>m.id===matId);if(!mat)return;
+  if(meters>mat.current){
+    document.getElementById('service-err-msg').textContent=`Metragem maior que o disponível (${fmtM(mat.current)}).`;
+    errEl.style.display='flex';return;
+  }
+  const cost=parseFloat((mat.cost*meters).toFixed(2));
+  DB.services.push({id:uid(),matId,matName:mat.name,meters,cost,desc,date:new Date().toISOString()});
+  DB.materials=DB.materials.map(mm=>mm.id===matId?{...mm,current:parseFloat((mm.current-meters).toFixed(2))}:mm);
+  save();closeModal('modal-service');renderPage('services');
 }
 
-function saveService() {
-  const matId = document.getElementById('svc-material').value;
-  const meters = parseFloat(document.getElementById('svc-meters').value);
-  const desc = document.getElementById('svc-desc').value.trim();
-  const errEl = document.getElementById('service-err');
-  errEl.style.display = 'none';
-  if (!matId || isNaN(meters) || meters <= 0) {
-    document.getElementById('service-err-msg').textContent = 'Selecione o material e informe a metragem.';
-    errEl.style.display = 'flex'; return;
-  }
-  const mat = DB.materials.find(m=>m.id===matId);
-  if (!mat) return;
-  if (meters > mat.current) {
-    document.getElementById('service-err-msg').textContent = `Metragem maior que o disponível (${fmtM(mat.current)}).`;
-    errEl.style.display = 'flex'; return;
-  }
-  const cost = parseFloat((mat.cost * meters).toFixed(2));
-  DB.services.push({ id: m(), matId, matName: mat.name, meters, cost, desc, date: new Date().toISOString() });
-  DB.materials = DB.materials.map(mm => mm.id===matId ? {...mm, current: parseFloat((mm.current-meters).toFixed(2))} : mm);
-  save(); closeModal('modal-service'); renderPage('services');
-}
+// ── REPORTS ──────────────────────────────────
+function renderReports(){
+  const el=document.getElementById('page-content');
+  const totalCost=DB.services.reduce((a,s)=>a+s.cost,0);
+  const totalMeters=DB.services.reduce((a,s)=>a+s.meters,0);
+  const stockValue=DB.materials.reduce((a,m)=>a+m.current*m.cost,0);
+  const avg=DB.services.length?totalCost/DB.services.length:0;
+  const byMat={};
+  DB.services.forEach(s=>{if(!byMat[s.matName])byMat[s.matName]={meters:0,cost:0,count:0};byMat[s.matName].meters+=s.meters;byMat[s.matName].cost+=s.cost;byMat[s.matName].count++;});
+  const ranked=Object.entries(byMat).sort((a,b)=>b[1].cost-a[1].cost);
 
-// ─── Reports ────────────────────────────────────────────
-function renderReports() {
-  const el = document.getElementById('page-content');
-  const totalCost = DB.services.reduce((a,s)=>a+s.cost,0);
-  const totalMeters = DB.services.reduce((a,s)=>a+s.meters,0);
-  const stockValue = DB.materials.reduce((a,m)=>a+m.current*m.cost,0);
-  const avgCost = DB.services.length ? totalCost/DB.services.length : 0;
-
-  const byMat = {};
-  DB.services.forEach(s => {
-    if (!byMat[s.matName]) byMat[s.matName] = { meters:0, cost:0, count:0 };
-    byMat[s.matName].meters += s.meters;
-    byMat[s.matName].cost += s.cost;
-    byMat[s.matName].count++;
-  });
-  const ranked = Object.entries(byMat).sort((a,b)=>b[1].cost-a[1].cost);
-
-  el.innerHTML = `<div class="page-section">
+  el.innerHTML=`<div class="page-section">
     <div class="metric-grid">
-      <div class="metric-card amber">
-        <div class="metric-icon amber"><i class="ti ti-cash"></i></div>
-        <div class="metric-label">Gasto em materiais</div>
-        <div class="metric-value sm">R$&nbsp;${fmt(totalCost)}</div>
-      </div>
-      <div class="metric-card green">
-        <div class="metric-icon green"><i class="ti ti-ruler"></i></div>
-        <div class="metric-label">Metros consumidos</div>
-        <div class="metric-value">${fmt(totalMeters)}<span style="font-size:14px">m</span></div>
-      </div>
-      <div class="metric-card blue">
-        <div class="metric-icon blue"><i class="ti ti-box"></i></div>
-        <div class="metric-label">Valor em estoque</div>
-        <div class="metric-value sm">R$&nbsp;${fmt(stockValue)}</div>
-      </div>
-      <div class="metric-card green">
-        <div class="metric-icon green"><i class="ti ti-calculator"></i></div>
-        <div class="metric-label">Custo médio/serviço</div>
-        <div class="metric-value sm">R$&nbsp;${fmt(avgCost)}</div>
-      </div>
+      <div class="metric-card amber"><div class="metric-icon amber"><i class="ti ti-cash"></i></div><div class="metric-label">Gasto total</div><div class="metric-value sm">R$&nbsp;${fmt(totalCost)}</div></div>
+      <div class="metric-card green"><div class="metric-icon green"><i class="ti ti-ruler"></i></div><div class="metric-label">Metros usados</div><div class="metric-value">${fmt(totalMeters)}<span style="font-size:13px">m</span></div></div>
+      <div class="metric-card blue"><div class="metric-icon blue"><i class="ti ti-box"></i></div><div class="metric-label">Valor em estoque</div><div class="metric-value sm">R$&nbsp;${fmt(stockValue)}</div></div>
+      <div class="metric-card green"><div class="metric-icon green"><i class="ti ti-calculator"></i></div><div class="metric-label">Custo médio</div><div class="metric-value sm">R$&nbsp;${fmt(avg)}</div></div>
     </div>
     <div class="panel">
       <div class="panel-header"><div class="panel-title"><i class="ti ti-chart-bar"></i> Consumo por material</div></div>
-      ${ranked.length === 0
-        ? `<div class="empty-state"><i class="ti ti-chart-bar"></i><p>Sem dados ainda</p></div>`
-        : `<div class="table-wrap"><table>
-            <thead><tr><th>#</th><th>Material</th><th>Serviços</th><th>Metros</th><th>Custo total</th><th>Participação</th></tr></thead>
-            <tbody>${ranked.map(([name,v],i)=>{
-              const pct = totalCost > 0 ? (v.cost/totalCost*100) : 0;
-              return `<tr>
-                <td style="color:var(--text3)">${i+1}</td>
-                <td>${name}</td>
-                <td class="mono">${v.count}</td>
-                <td class="mono">${fmtM(v.meters)}</td>
-                <td class="mono" style="color:var(--accent);font-weight:600">R$ ${fmt(v.cost)}</td>
-                <td>
-                  <div style="display:flex;align-items:center;gap:8px">
-                    <div class="progress-wrap" style="width:70px">
-                      <div class="progress-fill" style="width:${pct.toFixed(1)}%;background:var(--accent)"></div>
-                    </div>
-                    <span class="mono" style="font-size:12px">${pct.toFixed(0)}%</span>
-                  </div>
-                </td>
-              </tr>`;
-            }).join('')}</tbody>
-          </table></div>`}
+      ${ranked.length===0?`<div class="empty-state"><i class="ti ti-chart-bar"></i><p>Sem dados ainda</p></div>`:
+      `<div class="table-wrap desktop-table"><table>
+        <thead><tr><th>#</th><th>Material</th><th>Qtd</th><th>Metros</th><th>Custo</th><th>Part.</th></tr></thead>
+        <tbody>${ranked.map(([name,v],i)=>{
+          const pct=totalCost>0?(v.cost/totalCost*100):0;
+          return`<tr><td style="color:var(--text3)">${i+1}</td><td>${name}</td><td class="mono">${v.count}</td><td class="mono">${fmtM(v.meters)}</td>
+            <td class="mono" style="color:var(--accent);font-weight:600">R$ ${fmt(v.cost)}</td>
+            <td><div style="display:flex;align-items:center;gap:6px">${progressBar({current:pct,total:100,min:0},'60px')}<span class="mono" style="font-size:11px">${pct.toFixed(0)}%</span></div></td></tr>`;
+        }).join('')}</tbody>
+      </table></div>
+      <div class="svc-list" style="display:flex">
+      ${ranked.map(([name,v],i)=>{
+        const pct=totalCost>0?(v.cost/totalCost*100):0;
+        return`<div class="svc-card"><div class="svc-card-header"><span class="svc-card-name">${i+1}. ${name}</span><span class="svc-card-cost">R$ ${fmt(v.cost)}</span></div>
+        <div class="svc-card-meta">${v.count} serviços · ${fmtM(v.meters)} · ${pct.toFixed(0)}% do gasto</div></div>`;
+      }).join('')}
+      </div>`}
     </div>
     <div class="panel">
       <div class="panel-header"><div class="panel-title"><i class="ti ti-package"></i> Situação do estoque</div></div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>Material</th><th>Disponível</th><th>Total</th><th>Valor em estoque</th><th>Status</th></tr></thead>
+      <div class="table-wrap desktop-table"><table>
+        <thead><tr><th>Material</th><th>Disponível</th><th>Total</th><th>Valor</th><th>Status</th></tr></thead>
         <tbody>${DB.materials.map(mat=>`<tr>
-          <td>${mat.name}</td>
-          <td class="mono">${fmtM(mat.current)}</td>
+          <td>${mat.name}</td><td class="mono">${fmtM(mat.current)}</td>
           <td class="mono" style="color:var(--text3)">${fmtM(mat.total)}</td>
           <td class="mono" style="color:var(--accent)">R$ ${fmt(mat.current*mat.cost)}</td>
-          <td>${statusBadge(mat)}</td>
-        </tr>`).join('')}</tbody>
+          <td>${statusBadge(mat)}</td></tr>`).join('')}
+        </tbody>
       </table></div>
+      <div class="mat-list">${DB.materials.map(mat=>`<div class="mat-card">
+        <div class="mat-card-info">
+          <div class="mat-card-name">${mat.name}</div>
+          <div class="mat-card-sub" style="margin-top:4px">${fmtM(mat.current)} disponível · R$ ${fmt(mat.current*mat.cost)} em estoque</div>
+        </div>
+        <div class="mat-card-right">${statusBadge(mat)}</div>
+      </div>`).join('')}</div>
     </div>
   </div>`;
 }
 
-// ─── Modals ─────────────────────────────────────────────
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(o => {
-  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+// ── MODALS ───────────────────────────────────
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o){o.classList.remove('open');document.body.style.overflow='';}});
 });
 
-// ─── Boot ────────────────────────────────────────────────
-window.onload = () => {
-  if (DB.userName) {
-    document.getElementById('sidebar-name').textContent = DB.userName;
-    document.getElementById('sidebar-avatar').textContent = DB.userName[0].toUpperCase();
+// ── BOOT ─────────────────────────────────────
+window.onload=()=>{
+  if(DB.userName){
+    document.getElementById('sidebar-name').textContent=DB.userName;
+    document.getElementById('sidebar-avatar').textContent=DB.userName[0].toUpperCase();
   }
 };
 </script>
