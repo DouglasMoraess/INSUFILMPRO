@@ -21,29 +21,29 @@
   --red:#ff5c5c; --red-bg:rgba(255,92,92,0.1);
   --blue:#4d8eff; --blue-bg:rgba(77,142,255,0.1);
   --r:10px; --rl:14px;
-  --nav-h:62px;
-  --topbar-h:56px;
+  --nav-h:62px; --topbar-h:56px;
   --safe-b:env(safe-area-inset-bottom,0px);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{font-size:14px;-webkit-text-size-adjust:100%;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-/* ── DESKTOP LAYOUT ── */
-.app{display:flex;height:100vh;overflow:hidden;}
+/* ── LOADING SCREEN ── */
+#loading-screen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.loading-icon{width:52px;height:52px;border-radius:14px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#000;}
+.loading-text{font-size:14px;color:var(--text3);}
+.spinner{width:28px;height:28px;border:2px solid var(--bg3);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
 
-/* ── SIDEBAR (desktop) ── */
-.sidebar{
-  width:230px;flex-shrink:0;
-  background:var(--bg2);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-}
+/* ── LAYOUT ── */
+.app{display:flex;height:100vh;overflow:hidden;}
+.sidebar{width:230px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;}
 .sidebar-brand{padding:20px 20px 16px;border-bottom:1px solid var(--border);}
 .brand-logo{display:flex;align-items:center;gap:10px;}
 .brand-icon{width:32px;height:32px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#000;flex-shrink:0;}
 .brand-name{font-size:15px;font-weight:600;letter-spacing:-.3px;}
 .brand-sub{font-size:11px;color:var(--text3);margin-top:1px;}
-.sidebar-nav{flex:1;padding:10px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+.sidebar-nav{flex:1;padding:10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
 .nav-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:10px 10px 4px;}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);font-size:13.5px;cursor:pointer;color:var(--text2);transition:all .15s;position:relative;user-select:none;}
 .nav-item:hover{background:var(--bg3);color:var(--text);}
@@ -58,7 +58,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-logout{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;padding:6px;border-radius:6px;transition:all .15s;display:flex;align-items:center;font-size:18px;}
 .btn-logout:hover{color:var(--red);background:var(--red-bg);}
 
-/* ── MAIN ── */
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0;}
 .topbar{padding:0 22px;height:var(--topbar-h);background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;flex-shrink:0;}
 .topbar-left{display:flex;flex-direction:column;gap:1px;}
@@ -66,10 +65,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .topbar-sub{font-size:11px;color:var(--text3);}
 .page{padding:20px 22px;flex:1;}
 
-/* ── BOTTOM NAV (mobile only, hidden on desktop) ── */
-.bottom-nav{display:none;}
+/* ── SYNC INDICATOR ── */
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;margin-left:8px;transition:background .3s;}
+.sync-dot.syncing{background:var(--amber);animation:pulse .8s infinite;}
+.sync-dot.error{background:var(--red);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 
-/* ── FAB (mobile only) ── */
+/* ── BOTTOM NAV ── */
+.bottom-nav{display:none;}
 .fab{display:none;}
 
 /* ── METRIC CARDS ── */
@@ -107,21 +110,19 @@ tr:last-child td{border-bottom:none;}
 tr:hover td{background:var(--bg3);}
 .mono{font-family:'DM Mono',monospace;font-size:12px;}
 
-/* ── MOBILE CARD LIST (replaces table on small screens) ── */
-.mat-list{display:none;flex-direction:column;gap:0;}
-.mat-card{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;cursor:default;}
+/* ── MOBILE CARDS ── */
+.mat-list{display:none;flex-direction:column;}
+.mat-card{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
 .mat-card:last-child{border-bottom:none;}
 .mat-card-info{flex:1;min-width:0;}
 .mat-card-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.mat-card-sub{font-size:12px;color:var(--text3);margin-top:2px;}
-.mat-card-meta{display:flex;align-items:center;gap:8px;margin-top:6px;}
+.mat-card-sub{font-size:12px;color:var(--text3);margin-top:4px;}
 .mat-card-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
 .mat-card-actions{display:flex;gap:4px;}
-
-.svc-list{display:none;flex-direction:column;gap:0;}
+.svc-list{display:none;flex-direction:column;}
 .svc-card{padding:14px 16px;border-bottom:1px solid var(--border);}
 .svc-card:last-child{border-bottom:none;}
-.svc-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
+.svc-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px;}
 .svc-card-name{font-size:14px;font-weight:600;color:var(--text);}
 .svc-card-cost{font-size:14px;font-weight:600;color:var(--accent);font-family:'DM Mono',monospace;}
 .svc-card-meta{font-size:12px;color:var(--text3);}
@@ -140,6 +141,7 @@ tr:hover td{background:var(--bg3);}
 /* ── BUTTONS ── */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text);transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap;}
 .btn:hover{background:var(--bg4);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
 .btn-primary{background:var(--accent);color:#000;border-color:var(--accent);}
 .btn-primary:hover{background:var(--accent2);border-color:var(--accent2);}
 .btn-sm{padding:5px 10px;font-size:12px;}
@@ -170,12 +172,8 @@ tr:hover td{background:var(--bg3);}
 .form-group{margin-bottom:14px;}
 .form-group label{display:block;font-size:11px;color:var(--text3);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-input[type=text],input[type=number],input[type=password],input[type=email],select,textarea{
-  width:100%;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--r);
-  background:var(--bg3);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;
-  transition:border-color .15s;outline:none;-webkit-appearance:none;appearance:none;
-}
-input:focus,select:focus,textarea:focus{border-color:var(--accent);}
+input[type=text],input[type=number],input[type=password],select{width:100%;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg3);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;transition:border-color .15s;outline:none;-webkit-appearance:none;appearance:none;}
+input:focus,select:focus{border-color:var(--accent);}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235a5b6e' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
 select option{background:var(--bg3);}
 
@@ -195,117 +193,54 @@ select option{background:var(--bg3);}
 .login-logo p{font-size:12px;color:var(--text3);}
 .login-hint{font-size:11px;color:var(--text3);text-align:center;margin-top:14px;}
 
-/* ── TWO COL ── */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-
-/* ── EMPTY ── */
 .empty-state{padding:44px 20px;text-align:center;}
 .empty-state i{font-size:34px;color:var(--text3);display:block;margin-bottom:10px;}
 .empty-state p{color:var(--text3);font-size:13px;line-height:1.5;}
-
-/* ── CHART ── */
 .chart-wrap{padding:14px 18px;position:relative;height:210px;}
-
-/* ── ANIM ── */
 .page-section{animation:fadeIn .18s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
-
-/* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:99px;}
 
-/* ════════════════════════════════════════════
-   MOBILE BREAKPOINT  ≤ 640px
-════════════════════════════════════════════ */
+/* ── MOBILE ── */
 @media(max-width:640px){
-  /* Hide desktop sidebar */
   .sidebar{display:none;}
-
-  /* App stacks vertically */
   .app{flex-direction:column;height:100dvh;}
-
-  /* Topbar slim */
   .topbar{padding:0 16px;height:52px;}
   .topbar h2{font-size:15px;}
   .topbar-sub{display:none;}
-  #topbar-actions{display:none;}/* actions moved to FAB */
-
-  /* Page scrolls above bottom nav */
+  #topbar-actions{display:none;}
   .main{padding-bottom:var(--nav-h);}
   .page{padding:14px 14px;}
-
-  /* Bottom navigation bar */
-  .bottom-nav{
-    display:flex;
-    position:fixed;bottom:0;left:0;right:0;
-    height:calc(var(--nav-h) + var(--safe-b));
-    padding-bottom:var(--safe-b);
-    background:var(--bg2);border-top:1px solid var(--border);
-    z-index:100;
-  }
+  .bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--bg2);border-top:1px solid var(--border);z-index:100;}
   .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--text3);transition:color .15s;position:relative;padding-top:4px;}
   .bn-item.active{color:var(--accent);}
   .bn-item i{font-size:22px;}
   .bn-item span{font-size:10px;font-weight:500;}
   .bn-badge{position:absolute;top:6px;right:calc(50% - 18px);background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:99px;min-width:16px;text-align:center;}
-
-  /* FAB — floating action button */
-  .fab{
-    display:flex;
-    position:fixed;right:16px;bottom:calc(var(--nav-h) + 12px + var(--safe-b));
-    width:52px;height:52px;border-radius:50%;
-    background:var(--accent);color:#000;border:none;cursor:pointer;
-    font-size:24px;align-items:center;justify-content:center;
-    box-shadow:0 4px 20px rgba(0,212,160,.35);
-    z-index:99;transition:all .15s;
-  }
-  .fab:active{transform:scale(0.93);}
+  .fab{display:flex;position:fixed;right:16px;bottom:calc(var(--nav-h) + 12px + var(--safe-b));width:52px;height:52px;border-radius:50%;background:var(--accent);color:#000;border:none;cursor:pointer;font-size:24px;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,212,160,.35);z-index:99;transition:all .15s;}
+  .fab:active{transform:scale(.93);}
   .fab.hidden{display:none;}
-
-  /* Metric grid 2 cols on mobile */
   .metric-grid{grid-template-columns:1fr 1fr;gap:10px;}
   .metric-card{padding:13px 14px;}
   .metric-value{font-size:19px;}
   .metric-value.sm{font-size:15px;}
   .metric-icon{margin-bottom:8px;}
-
-  /* Two-col becomes one col */
   .two-col{grid-template-columns:1fr;}
-
-  /* Hide desktop tables, show mobile card lists */
   .desktop-table{display:none !important;}
   .mat-list{display:flex;}
   .svc-list{display:flex;}
-
-  /* Modal full-sheet from bottom */
-  .modal-overlay{align-items:flex-end;}
   .modal{border-radius:18px 18px 0 0;max-height:88vh;padding:16px 18px;padding-bottom:calc(18px + var(--safe-b));}
-
-  /* Form rows become single col */
   .form-row{grid-template-columns:1fr;}
-
-  /* Inputs bigger touch targets */
   input[type=text],input[type=number],input[type=password],select{padding:12px 14px;font-size:15px;}
-
-  /* Modal footer full width buttons */
   .modal-footer{flex-direction:column-reverse;}
   .modal-footer .btn{width:100%;justify-content:center;padding:12px;}
-
-  /* Alert banner compact */
-  .alert-banner{padding:10px 12px;font-size:12px;}
-
-  /* Panel header */
-  .panel-header{padding:12px 14px;}
-  .panel-title{font-size:12.5px;}
 }
-
-/* Medium: 641–900px — sidebar collapsed */
 @media(min-width:641px) and (max-width:900px){
   .sidebar{width:60px;}
-  .sidebar-brand .brand-name,.sidebar-brand .brand-sub,
-  .nav-item span,.nav-item .nav-badge,
-  .sidebar-user .user-name,.sidebar-user .user-role{display:none;}
+  .sidebar-brand .brand-name,.sidebar-brand .brand-sub,.nav-item span,.nav-item .nav-badge,.sidebar-user .user-name,.sidebar-user .user-role{display:none;}
   .nav-item{justify-content:center;padding:10px;}
   .nav-item.active::before{display:none;}
   .sidebar-brand{padding:16px 14px;}
@@ -317,37 +252,38 @@ select option{background:var(--bg3);}
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
-<div id="login-page" class="login-page">
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loading-icon">IF</div>
+  <div class="spinner"></div>
+  <div class="loading-text">Conectando ao Firebase...</div>
+</div>
+
+<!-- LOGIN -->
+<div id="login-page" class="login-page" style="display:none">
   <div class="login-card">
     <div class="login-logo">
       <div class="icon">IF</div>
       <div><h1>Insufilm Pro</h1><p>Controle de estoque por metragem</p></div>
     </div>
     <div class="form-group">
-      <label>Usuário</label>
-      <input type="text" id="login-user" value="admin" placeholder="admin" autocomplete="username">
-    </div>
-    <div class="form-group">
-      <label>Senha</label>
-      <input type="password" id="login-pass" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <label>Seu nome</label>
+      <input type="text" id="login-user" placeholder="Ex: João" autocomplete="name">
     </div>
     <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="doLogin()">
       <i class="ti ti-login"></i> Entrar
     </button>
-    <p class="login-hint">MVP · dados salvos no navegador</p>
+    <p class="login-hint">☁️ Dados salvos em tempo real no Firebase</p>
   </div>
 </div>
 
-<!-- ── APP ── -->
+<!-- APP -->
 <div id="app" class="app" style="display:none">
-
-  <!-- Desktop sidebar -->
   <nav class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-logo">
         <div class="brand-icon">IF</div>
-        <div><div class="brand-name">Insufilm Pro</div><div class="brand-sub">Estoque</div></div>
+        <div><div class="brand-name">Insufilm Pro</div><div class="brand-sub">Estoque ☁️</div></div>
       </div>
     </div>
     <div class="sidebar-nav">
@@ -364,11 +300,10 @@ select option{background:var(--bg3);}
     </div>
   </nav>
 
-  <!-- Main content -->
   <div class="main">
     <div class="topbar">
       <div class="topbar-left">
-        <h2 id="page-title">Dashboard</h2>
+        <h2 id="page-title">Dashboard <span class="sync-dot" id="sync-dot" title="Sincronizado"></span></h2>
         <div class="topbar-sub" id="page-sub">Visão geral do estoque</div>
       </div>
       <div id="topbar-actions"></div>
@@ -376,31 +311,17 @@ select option{background:var(--bg3);}
     <div class="page" id="page-content"></div>
   </div>
 
-  <!-- Mobile bottom nav -->
   <nav class="bottom-nav">
-    <div class="bn-item active" data-page="dashboard" onclick="goToMobile('dashboard',this)">
-      <i class="ti ti-layout-dashboard"></i><span>Início</span>
-    </div>
-    <div class="bn-item" data-page="materials" onclick="goToMobile('materials',this)">
-      <i class="ti ti-package"></i><span>Estoque</span>
-      <span class="bn-badge" id="badge-low-mob" style="display:none">0</span>
-    </div>
-    <div class="bn-item" data-page="services" onclick="goToMobile('services',this)">
-      <i class="ti ti-scissors"></i><span>Serviços</span>
-    </div>
-    <div class="bn-item" data-page="reports" onclick="goToMobile('reports',this)">
-      <i class="ti ti-chart-bar"></i><span>Relatórios</span>
-    </div>
-    <div class="bn-item" onclick="doLogout()">
-      <i class="ti ti-logout"></i><span>Sair</span>
-    </div>
+    <div class="bn-item active" data-page="dashboard" onclick="goToMobile('dashboard',this)"><i class="ti ti-layout-dashboard"></i><span>Início</span></div>
+    <div class="bn-item" data-page="materials" onclick="goToMobile('materials',this)"><i class="ti ti-package"></i><span>Estoque</span><span class="bn-badge" id="badge-low-mob" style="display:none">0</span></div>
+    <div class="bn-item" data-page="services" onclick="goToMobile('services',this)"><i class="ti ti-scissors"></i><span>Serviços</span></div>
+    <div class="bn-item" data-page="reports" onclick="goToMobile('reports',this)"><i class="ti ti-chart-bar"></i><span>Relatórios</span></div>
+    <div class="bn-item" onclick="doLogout()"><i class="ti ti-logout"></i><span>Sair</span></div>
   </nav>
-
-  <!-- FAB -->
   <button class="fab hidden" id="fab" onclick="fabAction()"><i class="ti ti-plus"></i></button>
 </div>
 
-<!-- ── MODAL: Material ── -->
+<!-- MODAL: Material -->
 <div class="modal-overlay" id="modal-material">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -408,9 +329,8 @@ select option{background:var(--bg3);}
       <div class="modal-title" id="modal-mat-title">Novo material</div>
       <button class="modal-close" onclick="closeModal('modal-material')"><i class="ti ti-x"></i></button>
     </div>
-    <div class="form-group"><label>Nome do material</label><input type="text" id="mat-name" placeholder="Ex: Insufilme G5" autocomplete="off"></div>
-    <div class="form-group">
-      <label>Tipo</label>
+    <div class="form-group"><label>Nome do material</label><input type="text" id="mat-name" placeholder="Nome do material" autocomplete="off"></div>
+    <div class="form-group"><label>Tipo</label>
       <select id="mat-type"><option>Insufilme</option><option>PPF</option><option>Vinil</option><option>Película Solar</option><option>Outro</option></select>
     </div>
     <div class="form-row">
@@ -423,12 +343,12 @@ select option{background:var(--bg3);}
     </div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('modal-material')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveMaterial()"><i class="ti ti-check"></i> Salvar</button>
+      <button class="btn btn-primary" id="btn-save-mat" onclick="saveMaterial()"><i class="ti ti-check"></i> Salvar</button>
     </div>
   </div>
 </div>
 
-<!-- ── MODAL: Serviço ── -->
+<!-- MODAL: Serviço -->
 <div class="modal-overlay" id="modal-service">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -440,56 +360,75 @@ select option{background:var(--bg3);}
       <i class="ti ti-alert-circle"></i>
       <div class="alert-banner-text"><span id="service-err-msg"></span></div>
     </div>
-    <div class="form-group">
-      <label>Material</label>
+    <div class="form-group"><label>Material</label>
       <select id="svc-material" onchange="updateServicePreview()"><option value="">Selecione...</option></select>
     </div>
-    <div class="form-group">
-      <label>Metros utilizados</label>
-      <input type="number" id="svc-meters" min="0.1" step="0.1" placeholder="Ex: 4.5" oninput="updateServicePreview()" inputmode="decimal">
+    <div class="form-group"><label>Metros utilizados</label>
+      <input type="number" id="svc-meters" min="0.1" step="0.1" placeholder="0.0" oninput="updateServicePreview()" inputmode="decimal">
     </div>
     <div id="svc-preview" class="cost-preview" style="display:none">
       <div class="cost-row"><span class="lbl">Custo estimado</span><span class="val" id="prev-cost">R$ 0,00</span></div>
       <div class="cost-row"><span class="lbl">Restará em estoque</span><span class="val" id="prev-remaining">—</span></div>
     </div>
-    <div class="form-group"><label>Descrição (opcional)</label><input type="text" id="svc-desc" placeholder="Ex: Honda Civic, lateral direita..." autocomplete="off"></div>
+    <div class="form-group"><label>Descrição (opcional)</label>
+      <input type="text" id="svc-desc" placeholder="Descrição do serviço" autocomplete="off">
+    </div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('modal-service')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveService()"><i class="ti ti-scissors"></i> Registrar</button>
+      <button class="btn btn-primary" id="btn-save-svc" onclick="saveService()"><i class="ti ti-scissors"></i> Registrar</button>
     </div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
-// ── DATA ──────────────────────────────────────
-const KEY='insufilm_pro_v3';
-let DB=load(),editingId=null,chartInst=null,currentPage='dashboard';
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore, collection, doc,
+  onSnapshot, addDoc, updateDoc, deleteDoc,
+  query, orderBy, serverTimestamp, writeBatch, getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { Chart } from "https://cdn.skypack.dev/chart.js@4.4.1";
 
-function load(){
-  try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}
-  return{
-    userName:'Admin',
-    materials:[
-      {id:uid(),name:'Insufilme G5',type:'Insufilme',total:50,current:8.5,cost:12.50,min:10},
-      {id:uid(),name:'Insufilme G20',type:'Insufilme',total:80,current:42,cost:14.00,min:15},
-      {id:uid(),name:'Insufilme G35',type:'Insufilme',total:60,current:3,cost:11.00,min:10},
-      {id:uid(),name:'PPF Transparente',type:'PPF',total:30,current:18,cost:45.00,min:8},
-      {id:uid(),name:'Vinil Branco Fosco',type:'Vinil',total:40,current:25,cost:8.50,min:10},
-    ],
-    services:[
-      {id:uid(),matId:'',matName:'Insufilme G20',meters:6,cost:84,desc:'Sedã completo',date:new Date(Date.now()-86400000*2).toISOString()},
-      {id:uid(),matId:'',matName:'PPF Transparente',meters:3.5,cost:157.50,desc:'Capô + retrovisores',date:new Date(Date.now()-86400000).toISOString()},
-      {id:uid(),matId:'',matName:'Insufilme G5',meters:4,cost:50,desc:'SUV completo',date:new Date(Date.now()-14400000).toISOString()},
-    ]
-  };
-}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}}
-function uid(){return Math.random().toString(36).slice(2)+Date.now();}
+// ── FIREBASE CONFIG ──────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyAxiAY4J3qu2dozBIKMMbDohpk98t55_74",
+  authDomain: "insufilmpro.firebaseapp.com",
+  projectId: "insufilmpro",
+  storageBucket: "insufilmpro.firebasestorage.app",
+  messagingSenderId: "1093793501083",
+  appId: "1:1093793501083:web:9f7939a569dac162f1db3e"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+const materialsCol = collection(db, 'materials');
+const servicesCol  = collection(db, 'services');
+
+// ── STATE ────────────────────────────────────
+let materials = [];
+let services  = [];
+let editingId = null;
+let currentPage = 'dashboard';
+let chartInst = null;
+let userName = localStorage.getItem('insufilm_user') || '';
+
+// ── UTILS ────────────────────────────────────
 function fmt(n){return Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fmtM(n){return Number(n).toFixed(1)+'m';}
-function fmtDate(iso){const d=new Date(iso);return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+function fmtDate(ts){
+  if(!ts)return'—';
+  const d=ts.toDate?ts.toDate():new Date(ts);
+  return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
 function isMobile(){return window.innerWidth<=640;}
+
+function syncDot(state){
+  const d=document.getElementById('sync-dot');
+  if(!d)return;
+  d.className='sync-dot'+(state==='syncing'?' syncing':state==='error'?' error':'');
+  d.title=state==='syncing'?'Sincronizando...':state==='error'?'Erro de conexão':'Sincronizado ✓';
+}
 
 function st(mat){
   if(mat.current<=0)return'critical';
@@ -502,17 +441,22 @@ function statusBadge(mat){
   if(s==='low')return`<span class="badge badge-low"><i class="ti ti-alert-triangle"></i> Baixo</span>`;
   return`<span class="badge badge-critical"><i class="ti ti-alert-circle"></i> Crítico</span>`;
 }
-function progressBar(mat,w=''){
-  const pct=Math.max(0,Math.min(100,(mat.current/mat.total)*100));
+function progressBar(pct,color){
+  const c=color||'#00d4a0';
+  return`<div class="progress-wrap"><div class="progress-fill" style="width:${Math.max(0,Math.min(100,pct)).toFixed(1)}%;background:${c}"></div></div>`;
+}
+function matProgress(mat){
+  const pct=(mat.current/mat.total)*100;
   const s=st(mat),color=s==='ok'?'#00d4a0':s==='low'?'#f5a623':'#ff5c5c';
-  return`<div class="progress-wrap" style="${w?'width:'+w:''}">`+
-    `<div class="progress-fill" style="width:${pct.toFixed(1)}%;background:${color}"></div></div>`;
+  return progressBar(pct,color);
 }
 
-// ── AUTH ──────────────────────────────────────
+// ── AUTH ─────────────────────────────────────
 function doLogin(){
-  const user=document.getElementById('login-user').value.trim()||'Admin';
-  DB.userName=user;save();
+  const user=document.getElementById('login-user').value.trim();
+  if(!user){alert('Digite seu nome.');return;}
+  userName=user;
+  localStorage.setItem('insufilm_user',user);
   document.getElementById('login-page').style.display='none';
   document.getElementById('app').style.display='flex';
   document.getElementById('sidebar-name').textContent=user;
@@ -523,6 +467,27 @@ function doLogout(){
   document.getElementById('app').style.display='none';
   document.getElementById('login-page').style.display='flex';
 }
+window.doLogin=doLogin;
+window.doLogout=doLogout;
+
+// ── REAL-TIME LISTENERS ───────────────────────
+function startListeners(){
+  onSnapshot(query(materialsCol,orderBy('name')), snap=>{
+    materials=snap.docs.map(d=>({id:d.id,...d.data()}));
+    syncDot('ok');
+    if(document.getElementById('app').style.display!=='none') refreshCurrentPage();
+  });
+  onSnapshot(query(servicesCol,orderBy('createdAt','desc')), snap=>{
+    services=snap.docs.map(d=>({id:d.id,...d.data()}));
+    syncDot('ok');
+    if(document.getElementById('app').style.display!=='none') refreshCurrentPage();
+  });
+}
+
+function refreshCurrentPage(){
+  updateBadge();
+  renderPage(currentPage,true);
+}
 
 // ── NAV ──────────────────────────────────────
 const pageMeta={
@@ -531,7 +496,6 @@ const pageMeta={
   services:['Serviços','Histórico de cortes'],
   reports:['Relatórios','Análise de consumo']
 };
-const fabPages=['materials','services'];
 
 function goTo(page,el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -543,75 +507,75 @@ function goToMobile(page,el){
   if(el)el.classList.add('active');
   renderPage(page);
 }
+window.goTo=goTo;
+window.goToMobile=goToMobile;
+
 function syncNav(page){
-  // desktop
   document.querySelectorAll('.nav-item[onclick]').forEach(n=>{
-    const p=n.getAttribute('onclick').match(/'(\w+)'/)?.[1];
-    n.classList.toggle('active',p===page);
+    const m=n.getAttribute('onclick').match(/'(\w+)'/);
+    if(m)n.classList.toggle('active',m[1]===page);
   });
-  // mobile
   document.querySelectorAll('.bn-item[data-page]').forEach(n=>{
     n.classList.toggle('active',n.dataset.page===page);
   });
-  // FAB
   const fab=document.getElementById('fab');
-  if(isMobile()&&fabPages.includes(page)){fab.classList.remove('hidden');}
-  else{fab.classList.add('hidden');}
+  if(isMobile()&&(page==='materials'||page==='services'))fab.classList.remove('hidden');
+  else fab.classList.add('hidden');
 }
 function fabAction(){
   if(currentPage==='materials')openAddMaterial();
   else if(currentPage==='services')openService();
 }
+window.fabAction=fabAction;
+
 function updateBadge(){
-  const low=DB.materials.filter(m=>st(m)!=='ok').length;
+  const low=materials.filter(m=>st(m)!=='ok').length;
   ['badge-low-desk','badge-low-mob'].forEach(id=>{
     const b=document.getElementById(id);if(!b)return;
     b.textContent=low;b.style.display=low>0?'':'none';
   });
 }
 
-function renderPage(page){
+function renderPage(page,silent=false){
   currentPage=page;
-  const[title,sub]=pageMeta[page];
-  document.getElementById('page-title').textContent=title;
-  document.getElementById('page-sub').textContent=sub;
-  updateBadge();syncNav(page);
-  if(chartInst){chartInst.destroy();chartInst=null;}
-  const actions=document.getElementById('topbar-actions');
-  actions.innerHTML='';
-  if(page==='materials')actions.innerHTML=`<button class="btn btn-primary btn-sm" onclick="openAddMaterial()"><i class="ti ti-plus"></i> Novo material</button>`;
-  else if(page==='services')actions.innerHTML=`<button class="btn btn-primary btn-sm" onclick="openService()"><i class="ti ti-scissors"></i> Registrar uso</button>`;
-  document.getElementById('page-content').innerHTML='';
+  if(!silent){
+    const[title]=pageMeta[page];
+    document.getElementById('page-title').innerHTML=`${title} <span class="sync-dot" id="sync-dot"></span>`;
+    document.getElementById('page-sub').textContent=pageMeta[page][1];
+    syncNav(page);
+    const actions=document.getElementById('topbar-actions');actions.innerHTML='';
+    if(page==='materials')actions.innerHTML=`<button class="btn btn-primary btn-sm" onclick="openAddMaterial()"><i class="ti ti-plus"></i> Novo material</button>`;
+    else if(page==='services')actions.innerHTML=`<button class="btn btn-primary btn-sm" onclick="openService()"><i class="ti ti-scissors"></i> Registrar uso</button>`;
+  }
+  if(chartInst&&page!=='dashboard'){chartInst.destroy();chartInst=null;}
   if(page==='dashboard')renderDashboard();
   else if(page==='materials')renderMaterials();
   else if(page==='services')renderServices();
   else if(page==='reports')renderReports();
-  document.getElementById('page-content').scrollTop=0;
 }
 
 // ── DASHBOARD ────────────────────────────────
 function renderDashboard(){
   const el=document.getElementById('page-content');
-  const low=DB.materials.filter(m=>st(m)!=='ok');
-  const totalCost=DB.services.reduce((a,s)=>a+s.cost,0);
-  const recent=[...DB.services].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
+  const low=materials.filter(m=>st(m)!=='ok');
+  const totalCost=services.reduce((a,s)=>a+s.cost,0);
+  const recent=services.slice(0,5);
   let alert='';
-  if(low.length>0){
-    alert=`<div class="alert-banner"><i class="ti ti-alert-triangle"></i>
-      <div class="alert-banner-text"><strong>${low.length} material(is) com estoque baixo</strong>
-      <span>${low.map(m=>m.name).join(', ')}</span></div></div>`;}
+  if(low.length>0)alert=`<div class="alert-banner"><i class="ti ti-alert-triangle"></i>
+    <div class="alert-banner-text"><strong>${low.length} material(is) com estoque baixo</strong>
+    <span>${low.map(m=>m.name).join(', ')}</span></div></div>`;
 
   el.innerHTML=`<div class="page-section">${alert}
     <div class="metric-grid">
-      <div class="metric-card green"><div class="metric-icon green"><i class="ti ti-package"></i></div><div class="metric-label">Materiais</div><div class="metric-value">${DB.materials.length}</div><div class="metric-sub">${[...new Set(DB.materials.map(m=>m.type))].length} tipos</div></div>
+      <div class="metric-card green"><div class="metric-icon green"><i class="ti ti-package"></i></div><div class="metric-label">Materiais</div><div class="metric-value">${materials.length}</div><div class="metric-sub">${[...new Set(materials.map(m=>m.type))].length} tipos</div></div>
       <div class="metric-card red"><div class="metric-icon red"><i class="ti ti-alert-circle"></i></div><div class="metric-label">Estoque baixo</div><div class="metric-value" style="${low.length>0?'color:var(--red)':''}">${low.length}</div><div class="metric-sub">em alerta</div></div>
-      <div class="metric-card blue"><div class="metric-icon blue"><i class="ti ti-scissors"></i></div><div class="metric-label">Serviços</div><div class="metric-value">${DB.services.length}</div><div class="metric-sub">registrados</div></div>
+      <div class="metric-card blue"><div class="metric-icon blue"><i class="ti ti-scissors"></i></div><div class="metric-label">Serviços</div><div class="metric-value">${services.length}</div><div class="metric-sub">registrados</div></div>
       <div class="metric-card amber"><div class="metric-icon amber"><i class="ti ti-currency-dollar"></i></div><div class="metric-label">Custo total</div><div class="metric-value sm">R$&nbsp;${fmt(totalCost)}</div><div class="metric-sub">em materiais</div></div>
     </div>
     <div class="two-col">
       <div class="panel">
         <div class="panel-header"><div class="panel-title"><i class="ti ti-chart-bar"></i> Mais utilizados</div></div>
-        <div class="chart-wrap"><canvas id="dash-chart" role="img" aria-label="Materiais mais utilizados em metros">Dados de consumo</canvas></div>
+        <div class="chart-wrap"><canvas id="dash-chart" role="img" aria-label="Consumo por material"></canvas></div>
       </div>
       <div class="panel">
         <div class="panel-header"><div class="panel-title"><i class="ti ti-clock"></i> Recentes</div></div>
@@ -620,22 +584,23 @@ function renderDashboard(){
         ${recent.map(s=>`<tr><td>${s.matName}</td><td class="mono">${fmtM(s.meters)}</td><td class="mono" style="color:var(--accent)">R$ ${fmt(s.cost)}</td></tr>`).join('')}
         </tbody></table></div>
         <div class="svc-list" style="display:flex">
-        ${recent.map(s=>`<div class="svc-card"><div class="svc-card-header"><span class="svc-card-name">${s.matName}</span><span class="svc-card-cost">R$ ${fmt(s.cost)}</span></div><div class="svc-card-meta">${fmtM(s.meters)} · ${fmtDate(s.date)}</div></div>`).join('')}
+        ${recent.map(s=>`<div class="svc-card"><div class="svc-card-header"><span class="svc-card-name">${s.matName}</span><span class="svc-card-cost">R$ ${fmt(s.cost)}</span></div><div class="svc-card-meta">${fmtM(s.meters)} · ${fmtDate(s.createdAt)}</div></div>`).join('')}
         </div>`}
       </div>
     </div>
   </div>`;
 
   const usage={};
-  DB.services.forEach(s=>{usage[s.matName]=(usage[s.matName]||0)+s.meters;});
+  services.forEach(s=>{usage[s.matName]=(usage[s.matName]||0)+s.meters;});
   const top=Object.entries(usage).sort((a,b)=>b[1]-a[1]).slice(0,5);
   if(top.length>0){
+    if(chartInst){chartInst.destroy();}
     chartInst=new Chart(document.getElementById('dash-chart'),{
       type:'bar',
       data:{labels:top.map(([n])=>n.length>14?n.slice(0,13)+'…':n),datasets:[{label:'Metros',data:top.map(([,v])=>v),backgroundColor:'#00d4a0',borderRadius:4,hoverBackgroundColor:'#00a87e'}]},
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
-        y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5a5b6e',font:{family:'DM Mono',size:10}}},
-        x:{grid:{display:false},ticks:{color:'#9b9cb0',font:{family:'DM Sans',size:10},maxRotation:30}}
+        y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#5a5b6e',font:{size:10}}},
+        x:{grid:{display:false},ticks:{color:'#9b9cb0',font:{size:10},maxRotation:30}}
       }}
     });
   }
@@ -644,59 +609,48 @@ function renderDashboard(){
 // ── MATERIALS ────────────────────────────────
 function renderMaterials(){
   const el=document.getElementById('page-content');
-  if(DB.materials.length===0){
+  if(materials.length===0){
     el.innerHTML=`<div class="panel"><div class="empty-state"><i class="ti ti-package"></i><p>Nenhum material.<br>Toque em + para adicionar.</p></div></div>`;return;
   }
-  // Mobile card list
-  const mobileCards=DB.materials.map(mat=>{
-    const pct=Math.max(0,Math.min(100,(mat.current/mat.total)*100));
-    const s=st(mat),color=s==='ok'?'#00d4a0':s==='low'?'#f5a623':'#ff5c5c';
-    return`<div class="mat-card">
-      <div class="mat-card-info">
-        <div class="mat-card-name">${mat.name}</div>
-        <div class="mat-card-meta">
-          ${progressBar(mat,'100%')}
-          <div class="mat-card-sub">${fmtM(mat.current)} / ${fmtM(mat.total)} · R$${fmt(mat.cost)}/m</div>
-        </div>
+  const mobileCards=materials.map(mat=>`<div class="mat-card">
+    <div class="mat-card-info">
+      <div class="mat-card-name">${mat.name}</div>
+      ${matProgress(mat)}
+      <div class="mat-card-sub">${fmtM(mat.current)} / ${fmtM(mat.total)} · R$ ${fmt(mat.cost)}/m</div>
+    </div>
+    <div class="mat-card-right">
+      ${statusBadge(mat)}
+      <div class="mat-card-actions">
+        <button class="btn btn-icon btn-sm" onclick="openEditMaterial('${mat.id}')"><i class="ti ti-edit"></i></button>
+        <button class="btn btn-icon btn-sm btn-danger" onclick="deleteMaterial('${mat.id}')"><i class="ti ti-trash"></i></button>
       </div>
-      <div class="mat-card-right">
-        ${statusBadge(mat)}
-        <div class="mat-card-actions">
-          <button class="btn btn-icon btn-sm" onclick="openEditMaterial('${mat.id}')"><i class="ti ti-edit"></i></button>
-          <button class="btn btn-icon btn-sm btn-danger" onclick="deleteMaterial('${mat.id}')"><i class="ti ti-trash"></i></button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+    </div>
+  </div>`).join('');
 
   el.innerHTML=`<div class="page-section"><div class="panel">
-    <div class="panel-header">
-      <div class="panel-title"><i class="ti ti-package"></i> ${DB.materials.length} materiais</div>
-      <button class="btn btn-primary btn-sm" onclick="openAddMaterial()" style="display:none" id="btn-add-mat-panel"><i class="ti ti-plus"></i> Novo</button>
-    </div>
+    <div class="panel-header"><div class="panel-title"><i class="ti ti-package"></i> ${materials.length} materiais</div></div>
     <div class="table-wrap desktop-table"><table>
       <thead><tr><th>Material</th><th>Tipo</th><th>Disponível</th><th>Estoque</th><th>R$/m</th><th>Alerta</th><th>Status</th><th></th></tr></thead>
-      <tbody id="mat-tbody"></tbody>
+      <tbody>${materials.map(mat=>{
+        const pct=(mat.current/mat.total*100);
+        const s=st(mat),color=s==='ok'?'#00d4a0':s==='low'?'#f5a623':'#ff5c5c';
+        return`<tr>
+          <td>${mat.name}</td>
+          <td><span class="badge-type">${mat.type}</span></td>
+          <td class="mono">${fmtM(mat.current)} <span style="color:var(--text3);font-size:11px">/ ${fmtM(mat.total)}</span></td>
+          <td style="min-width:110px">${progressBar(pct,color)}<span style="font-size:10px;color:var(--text3)">${pct.toFixed(0)}%</span></td>
+          <td class="mono">R$ ${fmt(mat.cost)}</td>
+          <td class="mono" style="color:var(--text3)">${fmtM(mat.min)}</td>
+          <td>${statusBadge(mat)}</td>
+          <td><div style="display:flex;gap:4px">
+            <button class="btn btn-icon btn-sm" onclick="openEditMaterial('${mat.id}')"><i class="ti ti-edit"></i></button>
+            <button class="btn btn-icon btn-sm btn-danger" onclick="deleteMaterial('${mat.id}')"><i class="ti ti-trash"></i></button>
+          </div></td>
+        </tr>`;
+      }).join('')}</tbody>
     </table></div>
     <div class="mat-list">${mobileCards}</div>
   </div></div>`;
-
-  const tbody=document.getElementById('mat-tbody');
-  DB.materials.forEach(mat=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${mat.name}</td>
-      <td><span class="badge-type">${mat.type}</span></td>
-      <td class="mono">${fmtM(mat.current)} <span style="color:var(--text3);font-size:11px">/ ${fmtM(mat.total)}</span></td>
-      <td style="min-width:110px">${progressBar(mat)}<span style="font-size:10px;color:var(--text3)">${((mat.current/mat.total)*100).toFixed(0)}%</span></td>
-      <td class="mono">R$ ${fmt(mat.cost)}</td>
-      <td class="mono" style="color:var(--text3)">${fmtM(mat.min)}</td>
-      <td>${statusBadge(mat)}</td>
-      <td><div style="display:flex;gap:4px">
-        <button class="btn btn-icon btn-sm" onclick="openEditMaterial('${mat.id}')"><i class="ti ti-edit"></i></button>
-        <button class="btn btn-icon btn-sm btn-danger" onclick="deleteMaterial('${mat.id}')"><i class="ti ti-trash"></i></button>
-      </div></td>`;
-    tbody.appendChild(tr);
-  });
 }
 
 function openAddMaterial(){
@@ -707,7 +661,8 @@ function openAddMaterial(){
   openModal('modal-material');
 }
 function openEditMaterial(id){
-  editingId=id;const mat=DB.materials.find(m=>m.id===id);if(!mat)return;
+  editingId=id;
+  const mat=materials.find(m=>m.id===id);if(!mat)return;
   document.getElementById('modal-mat-title').textContent='Editar material';
   document.getElementById('mat-name').value=mat.name;
   document.getElementById('mat-type').value=mat.type;
@@ -717,7 +672,7 @@ function openEditMaterial(id){
   document.getElementById('mat-min').value=mat.min;
   openModal('modal-material');
 }
-function saveMaterial(){
+async function saveMaterial(){
   const name=document.getElementById('mat-name').value.trim();
   const type=document.getElementById('mat-type').value;
   const total=parseFloat(document.getElementById('mat-total').value);
@@ -726,38 +681,46 @@ function saveMaterial(){
   let current=parseFloat(document.getElementById('mat-current').value);
   if(!name||isNaN(total)||isNaN(costV)){alert('Preencha nome, total e custo.');return;}
   if(isNaN(current))current=total;
-  if(editingId){
-    DB.materials=DB.materials.map(m=>m.id===editingId?{...m,name,type,total,current,cost:costV,min}:m);
-  }else{
-    DB.materials.push({id:uid(),name,type,total,current,cost:costV,min});
-  }
-  save();closeModal('modal-material');renderPage('materials');
+  const btn=document.getElementById('btn-save-mat');
+  btn.disabled=true;btn.textContent='Salvando...';
+  syncDot('syncing');
+  try{
+    const data={name,type,total,current,cost:costV,min};
+    if(editingId){await updateDoc(doc(db,'materials',editingId),data);}
+    else{await addDoc(materialsCol,{...data,createdAt:serverTimestamp()});}
+    closeModal('modal-material');
+  }catch(e){alert('Erro ao salvar: '+e.message);}
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Salvar';
 }
-function deleteMaterial(id){
+async function deleteMaterial(id){
   if(!confirm('Remover este material?'))return;
-  DB.materials=DB.materials.filter(m=>m.id!==id);
-  save();renderPage('materials');
+  syncDot('syncing');
+  try{await deleteDoc(doc(db,'materials',id));}
+  catch(e){alert('Erro: '+e.message);}
 }
+window.openAddMaterial=openAddMaterial;
+window.openEditMaterial=openEditMaterial;
+window.saveMaterial=saveMaterial;
+window.deleteMaterial=deleteMaterial;
 
 // ── SERVICES ─────────────────────────────────
 function renderServices(){
   const el=document.getElementById('page-content');
-  const sorted=[...DB.services].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if(sorted.length===0){
+  if(services.length===0){
     el.innerHTML=`<div class="panel"><div class="empty-state"><i class="ti ti-scissors"></i><p>Nenhum serviço ainda.<br>Toque em + para registrar.</p></div></div>`;return;
   }
-  const mobileList=sorted.map(s=>`<div class="svc-card">
+  const mobileList=services.map(s=>`<div class="svc-card">
     <div class="svc-card-header"><span class="svc-card-name">${s.matName}</span><span class="svc-card-cost">R$ ${fmt(s.cost)}</span></div>
-    <div class="svc-card-meta">${fmtM(s.meters)} utilizados · ${fmtDate(s.date)}</div>
+    <div class="svc-card-meta">${fmtM(s.meters)} utilizados · ${fmtDate(s.createdAt)}</div>
     ${s.desc?`<div class="svc-card-meta" style="margin-top:2px;color:var(--text2)">${s.desc}</div>`:''}
   </div>`).join('');
 
   el.innerHTML=`<div class="page-section"><div class="panel">
-    <div class="panel-header"><div class="panel-title"><i class="ti ti-scissors"></i> ${sorted.length} serviços</div></div>
+    <div class="panel-header"><div class="panel-title"><i class="ti ti-scissors"></i> ${services.length} serviços</div></div>
     <div class="table-wrap desktop-table"><table>
       <thead><tr><th>Data</th><th>Material</th><th>Metros</th><th>Custo</th><th>Descrição</th></tr></thead>
-      <tbody>${sorted.map(s=>`<tr>
-        <td class="mono" style="color:var(--text3);font-size:11px;white-space:nowrap">${fmtDate(s.date)}</td>
+      <tbody>${services.map(s=>`<tr>
+        <td class="mono" style="color:var(--text3);font-size:11px;white-space:nowrap">${fmtDate(s.createdAt)}</td>
         <td>${s.matName}</td>
         <td class="mono">${fmtM(s.meters)}</td>
         <td class="mono" style="color:var(--accent);font-weight:600">R$ ${fmt(s.cost)}</td>
@@ -775,7 +738,7 @@ function openService(){
   document.getElementById('svc-preview').style.display='none';
   const sel=document.getElementById('svc-material');
   sel.innerHTML='<option value="">Selecione...</option>';
-  DB.materials.forEach(mat=>{
+  materials.forEach(mat=>{
     const op=document.createElement('option');
     op.value=mat.id;
     op.textContent=`${mat.name} (${fmtM(mat.current)} disponível)`;
@@ -789,7 +752,7 @@ function updateServicePreview(){
   const meters=parseFloat(document.getElementById('svc-meters').value);
   const prev=document.getElementById('svc-preview');
   if(!matId||isNaN(meters)||meters<=0){prev.style.display='none';return;}
-  const mat=DB.materials.find(m=>m.id===matId);if(!mat)return;
+  const mat=materials.find(m=>m.id===matId);if(!mat)return;
   const rem=mat.current-meters;
   prev.style.display='';
   document.getElementById('prev-cost').textContent='R$ '+fmt(mat.cost*meters);
@@ -797,7 +760,7 @@ function updateServicePreview(){
   remEl.textContent=fmtM(Math.max(0,rem));
   remEl.style.color=rem<0?'var(--red)':rem<=mat.min?'var(--amber)':'var(--accent)';
 }
-function saveService(){
+async function saveService(){
   const matId=document.getElementById('svc-material').value;
   const meters=parseFloat(document.getElementById('svc-meters').value);
   const desc=document.getElementById('svc-desc').value.trim();
@@ -807,26 +770,42 @@ function saveService(){
     document.getElementById('service-err-msg').textContent='Selecione o material e informe a metragem.';
     errEl.style.display='flex';return;
   }
-  const mat=DB.materials.find(m=>m.id===matId);if(!mat)return;
+  const mat=materials.find(m=>m.id===matId);if(!mat)return;
   if(meters>mat.current){
     document.getElementById('service-err-msg').textContent=`Metragem maior que o disponível (${fmtM(mat.current)}).`;
     errEl.style.display='flex';return;
   }
-  const cost=parseFloat((mat.cost*meters).toFixed(2));
-  DB.services.push({id:uid(),matId,matName:mat.name,meters,cost,desc,date:new Date().toISOString()});
-  DB.materials=DB.materials.map(mm=>mm.id===matId?{...mm,current:parseFloat((mm.current-meters).toFixed(2))}:mm);
-  save();closeModal('modal-service');renderPage('services');
+  const btn=document.getElementById('btn-save-svc');
+  btn.disabled=true;btn.textContent='Salvando...';
+  syncDot('syncing');
+  try{
+    const cost=parseFloat((mat.cost*meters).toFixed(2));
+    const batch=writeBatch(db);
+    batch.add=undefined; // não existe batch.add, usar addDoc separado
+    // Atualiza estoque e cria serviço em batch
+    const matRef=doc(db,'materials',matId);
+    const newCurrent=parseFloat((mat.current-meters).toFixed(2));
+    batch.update(matRef,{current:newCurrent});
+    const svcRef=doc(servicesCol);
+    batch.set(svcRef,{matId,matName:mat.name,meters,cost,desc,operador:userName,createdAt:serverTimestamp()});
+    await batch.commit();
+    closeModal('modal-service');
+  }catch(e){alert('Erro ao registrar: '+e.message);}
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-scissors"></i> Registrar';
 }
+window.openService=openService;
+window.updateServicePreview=updateServicePreview;
+window.saveService=saveService;
 
 // ── REPORTS ──────────────────────────────────
 function renderReports(){
   const el=document.getElementById('page-content');
-  const totalCost=DB.services.reduce((a,s)=>a+s.cost,0);
-  const totalMeters=DB.services.reduce((a,s)=>a+s.meters,0);
-  const stockValue=DB.materials.reduce((a,m)=>a+m.current*m.cost,0);
-  const avg=DB.services.length?totalCost/DB.services.length:0;
+  const totalCost=services.reduce((a,s)=>a+s.cost,0);
+  const totalMeters=services.reduce((a,s)=>a+s.meters,0);
+  const stockValue=materials.reduce((a,m)=>a+m.current*m.cost,0);
+  const avg=services.length?totalCost/services.length:0;
   const byMat={};
-  DB.services.forEach(s=>{if(!byMat[s.matName])byMat[s.matName]={meters:0,cost:0,count:0};byMat[s.matName].meters+=s.meters;byMat[s.matName].cost+=s.cost;byMat[s.matName].count++;});
+  services.forEach(s=>{if(!byMat[s.matName])byMat[s.matName]={meters:0,cost:0,count:0};byMat[s.matName].meters+=s.meters;byMat[s.matName].cost+=s.cost;byMat[s.matName].count++;});
   const ranked=Object.entries(byMat).sort((a,b)=>b[1].cost-a[1].cost);
 
   el.innerHTML=`<div class="page-section">
@@ -844,8 +823,8 @@ function renderReports(){
         <tbody>${ranked.map(([name,v],i)=>{
           const pct=totalCost>0?(v.cost/totalCost*100):0;
           return`<tr><td style="color:var(--text3)">${i+1}</td><td>${name}</td><td class="mono">${v.count}</td><td class="mono">${fmtM(v.meters)}</td>
-            <td class="mono" style="color:var(--accent);font-weight:600">R$ ${fmt(v.cost)}</td>
-            <td><div style="display:flex;align-items:center;gap:6px">${progressBar({current:pct,total:100,min:0},'60px')}<span class="mono" style="font-size:11px">${pct.toFixed(0)}%</span></div></td></tr>`;
+          <td class="mono" style="color:var(--accent);font-weight:600">R$ ${fmt(v.cost)}</td>
+          <td><div style="display:flex;align-items:center;gap:6px">${progressBar(pct,'#00d4a0')}<span class="mono" style="font-size:11px">${pct.toFixed(0)}%</span></div></td></tr>`;
         }).join('')}</tbody>
       </table></div>
       <div class="svc-list" style="display:flex">
@@ -859,15 +838,15 @@ function renderReports(){
     <div class="panel">
       <div class="panel-header"><div class="panel-title"><i class="ti ti-package"></i> Situação do estoque</div></div>
       <div class="table-wrap desktop-table"><table>
-        <thead><tr><th>Material</th><th>Disponível</th><th>Total</th><th>Valor</th><th>Status</th></tr></thead>
-        <tbody>${DB.materials.map(mat=>`<tr>
+        <thead><tr><th>Material</th><th>Disponível</th><th>Total</th><th>Valor em estoque</th><th>Status</th></tr></thead>
+        <tbody>${materials.map(mat=>`<tr>
           <td>${mat.name}</td><td class="mono">${fmtM(mat.current)}</td>
           <td class="mono" style="color:var(--text3)">${fmtM(mat.total)}</td>
           <td class="mono" style="color:var(--accent)">R$ ${fmt(mat.current*mat.cost)}</td>
           <td>${statusBadge(mat)}</td></tr>`).join('')}
         </tbody>
       </table></div>
-      <div class="mat-list">${DB.materials.map(mat=>`<div class="mat-card">
+      <div class="mat-list">${materials.map(mat=>`<div class="mat-card">
         <div class="mat-card-info">
           <div class="mat-card-name">${mat.name}</div>
           <div class="mat-card-sub" style="margin-top:4px">${fmtM(mat.current)} disponível · R$ ${fmt(mat.current*mat.cost)} em estoque</div>
@@ -884,14 +863,27 @@ function closeModal(id){document.getElementById(id).classList.remove('open');doc
 document.querySelectorAll('.modal-overlay').forEach(o=>{
   o.addEventListener('click',e=>{if(e.target===o){o.classList.remove('open');document.body.style.overflow='';}});
 });
+window.openModal=openModal;
+window.closeModal=closeModal;
 
 // ── BOOT ─────────────────────────────────────
-window.onload=()=>{
-  if(DB.userName){
-    document.getElementById('sidebar-name').textContent=DB.userName;
-    document.getElementById('sidebar-avatar').textContent=DB.userName[0].toUpperCase();
+// Remove dados locais antigos (versões sem Firebase)
+['insufilm_data','insufilm_pro_v2','insufilm_pro_v3'].forEach(k=>localStorage.removeItem(k));
+
+setTimeout(()=>{
+  document.getElementById('loading-screen').style.display='none';
+  if(userName){
+    document.getElementById('login-page').style.display='none';
+    document.getElementById('app').style.display='flex';
+    document.getElementById('sidebar-name').textContent=userName;
+    document.getElementById('sidebar-avatar').textContent=userName[0].toUpperCase();
+    renderPage('dashboard');
+  }else{
+    document.getElementById('login-page').style.display='flex';
   }
-};
+  startListeners();
+},1200);
+
 </script>
 </body>
 </html>
